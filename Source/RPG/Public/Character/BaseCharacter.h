@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBaseStatsComponent* BaseStatsComp;
 
+	UFUNCTION(Blueprintpure, Category = "Stats")
+	float ReturnPlayersHealth();
+
 protected:
 
 	// Called when the game starts or when spawned

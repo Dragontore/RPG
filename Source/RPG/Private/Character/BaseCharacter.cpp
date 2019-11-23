@@ -124,3 +124,12 @@ void ABaseCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+float ABaseCharacter::ReturnPlayersHealth()
+{
+	float RetCurrentHealth = BaseStatsComp->GetCurrentHealth();
+	float RetMaxHealth = BaseStatsComp->GetMaxHealth();
+
+	float RetHealth = RetMaxHealth / RetCurrentHealth;
+	return RetHealth;
+}

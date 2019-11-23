@@ -50,5 +50,10 @@ protected:
 public:	
 
 	void HealthRegen(float healthRegen);
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetCurrentHealth();
 	
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetMaxHealth();
 };

@@ -72,3 +72,13 @@ void UBaseStatsComponent::ServerHealthRegen_Implementation(float serverHealthReg
 		HealthRegen(serverHealthRegen);
 	}
 }
+
+float UBaseStatsComponent::GetCurrentHealth()
+{
+	return CurrentHealth;
+}
+
+float UBaseStatsComponent::GetMaxHealth()
+{
+	return MaxHealth;
+}
