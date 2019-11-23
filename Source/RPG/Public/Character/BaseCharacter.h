@@ -48,6 +48,10 @@ protected:
 	UFUNCTION(Blueprintpure, Category = "Stats")
 	float ReturnPlayerStamina();
 
+	// Function to display Mana Bar
+	UFUNCTION(Blueprintpure, Category = "Stats")
+	float ReturnPlayerMana();
+
 
 protected:
 

@@ -142,3 +142,13 @@ float ABaseCharacter::ReturnPlayerStamina()
 
 	return RetStamina;
 }
+
+float ABaseCharacter::ReturnPlayerMana()
+{
+	float RetCurrentMana = BaseStatsComp->GetCurrentMana();
+	float RetMaxMana = BaseStatsComp->GetMaxMana();
+
+	float RetMana = RetCurrentMana / RetMaxMana;
+
+	return RetMana;
+}

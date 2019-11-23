@@ -36,6 +36,15 @@ protected:
 
 	float StaminaRegenRate;
 
+	//Mana Varibles
+	UPROPERTY(Replicated)
+	float CurrentMana;
+
+	UPROPERTY(Replicated)
+	float MaxMana;
+
+	float ManaRegenRate;
+
 	//Regenratiion rate for all stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
 	float RegenRate;
@@ -65,11 +74,18 @@ protected:
 	bool ServerStaminaRegen_Validate(float serverStaminaRegen);
 	void ServerStaminaRegen_Implementation(float serverStaminaRegen);
 
+	//Mana Server Function
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerManaRegen(float serverManaRegen);
+	bool ServerManaRegen_Validate(float serverManaRegen);
+	void ServerManaRegen_Implementation(float serverManaRegen);
 public:	
 	// Non Server Health Function
 	void HealthRegen(float healthRegen);
 	// Non Server Stamina Function
 	void StaminaRegen(float StaminaRegen);
+	// Non Server Mana Function
+	void ManaRegen(float ManaRegen);
 
 	// Health Getter Function
 	UFUNCTION(BlueprintCallable, Category = "Getter")
@@ -85,6 +101,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetMaxStamina();
 
+	//Mana Getter Function
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetCurrentMana();
 
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetMaxMana();
 
 };

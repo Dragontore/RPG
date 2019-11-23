@@ -23,6 +23,11 @@ UBaseStatsComponent::UBaseStatsComponent()
 	MaxStamina = 100.f;
 	StaminaRegenRate = 5.f;
 
+	// Mana Defaults
+	CurrentMana = 50.f;
+	MaxMana = 100.f;
+	ManaRegenRate = 5.f;
+
 	RegenRate = 3.f;
 }
 
@@ -50,12 +55,17 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	//Stamina Replicated Varibles
 	DOREPLIFETIME(UBaseStatsComponent, CurrentStamina);
 	DOREPLIFETIME(UBaseStatsComponent, MaxStamina);
+
+	//Mana Replicated Varibles
+	DOREPLIFETIME(UBaseStatsComponent, CurrentMana);
+	DOREPLIFETIME(UBaseStatsComponent, MaxMana);
 }
 
 void UBaseStatsComponent::HandleBaseStats()
 {
 	HealthRegen(HealthRegenRate);
 	StaminaRegen(StaminaRegenRate);
+	ManaRegen(ManaRegenRate);
 }
 
 void UBaseStatsComponent::HealthRegen(float healthRegen)
@@ -88,12 +98,32 @@ void UBaseStatsComponent::StaminaRegen(float staminaRegen)
 	}
 }
 
+void UBaseStatsComponent::ManaRegen(float ManaRegen)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerManaRegen(ManaRegen);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		if (CurrentMana < MaxMana)
+		{
+			CurrentMana += ManaRegen;
+		}
+	}
+}
+
 bool UBaseStatsComponent::ServerHealthRegen_Validate(float serverHealthRegen)
 {
 	return true;
 }
 
 bool UBaseStatsComponent::ServerStaminaRegen_Validate(float serverStaminaRegen)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerManaRegen_Validate(float serverManaRegen)
 {
 	return true;
 }
@@ -111,6 +141,14 @@ void UBaseStatsComponent::ServerStaminaRegen_Implementation(float serverStaminaR
 	if (GetOwnerRole() == ROLE_Authority)
 	{
 		StaminaRegen(serverStaminaRegen);
+	}
+}
+
+void UBaseStatsComponent::ServerManaRegen_Implementation(float serverManaRegen)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		ManaRegen(serverManaRegen);
 	}
 }
 
@@ -132,4 +170,14 @@ float UBaseStatsComponent::GetCurrentStamina()
 float UBaseStatsComponent::GetMaxStamina()
 {
 	return MaxStamina;
+}
+
+float UBaseStatsComponent::GetCurrentMana()
+{
+	return CurrentMana;
+}
+
+float UBaseStatsComponent::GetMaxMana()
+{
+	return MaxMana;
 }
