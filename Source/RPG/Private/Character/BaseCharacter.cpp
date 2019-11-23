@@ -130,6 +130,15 @@ float ABaseCharacter::ReturnPlayersHealth()
 	float RetCurrentHealth = BaseStatsComp->GetCurrentHealth();
 	float RetMaxHealth = BaseStatsComp->GetMaxHealth();
 
-	float RetHealth = RetMaxHealth / RetCurrentHealth;
+	float RetHealth = RetCurrentHealth / RetMaxHealth;
 	return RetHealth;
+}
+float ABaseCharacter::ReturnPlayerStamina()
+{
+	float RetCurrentStamina = BaseStatsComp->GetCurrentStamina();
+	float RetMaxStamina = BaseStatsComp->GetMaxStamina();
+
+	float RetStamina = RetCurrentStamina / RetMaxStamina;
+
+	return RetStamina;
 }

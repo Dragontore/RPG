@@ -40,8 +40,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBaseStatsComponent* BaseStatsComp;
 
+	//Function to display Health Bar
 	UFUNCTION(Blueprintpure, Category = "Stats")
 	float ReturnPlayersHealth();
+
+	// Function to display Stamina Bar
+	UFUNCTION(Blueprintpure, Category = "Stats")
+	float ReturnPlayerStamina();
+
 
 protected:
 

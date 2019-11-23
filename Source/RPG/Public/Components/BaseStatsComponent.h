@@ -18,16 +18,27 @@ protected:
 
 	FTimerHandle TimerHandle;
 
+	// Health Varibles
 	UPROPERTY(Replicated)
 	float CurrentHealth;
 
 	UPROPERTY(Replicated)
 	float MaxHealth;
 
+	float HealthRegenRate;
+
+	//Stamina Varibles
+	UPROPERTY(Replicated)
+	float CurrentStamina;
+
+	UPROPERTY(Replicated)
+	float MaxStamina;
+
+	float StaminaRegenRate;
+
+	//Regenratiion rate for all stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
 	float RegenRate;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
-	float HealthRegenRate;
 
 	
 
@@ -39,21 +50,41 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	//Handles the bas Stats regen
+	//Handles the base Stats regen
 	void HandleBaseStats();
 
+	// Health Stamina Functions
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerHealthRegen(float serverHealthRegen);
 	bool ServerHealthRegen_Validate(float serverHealthRegen);
 	void ServerHealthRegen_Implementation(float serverHealthRegen);
 
+	//Stamina Server Functions
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerStaminaRegen(float serverStaminaRegen);
+	bool ServerStaminaRegen_Validate(float serverStaminaRegen);
+	void ServerStaminaRegen_Implementation(float serverStaminaRegen);
+
 public:	
-
+	// Non Server Health Function
 	void HealthRegen(float healthRegen);
+	// Non Server Stamina Function
+	void StaminaRegen(float StaminaRegen);
 
+	// Health Getter Function
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetCurrentHealth();
 	
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetMaxHealth();
+
+	// Stamina Getter Function
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetCurrentStamina();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetMaxStamina();
+
+
+
 };

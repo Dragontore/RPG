@@ -13,10 +13,17 @@
 // Sets default values for this component's properties
 UBaseStatsComponent::UBaseStatsComponent()
 {
+	//Health defaults
 	CurrentHealth = 50.f;
 	MaxHealth = 100.f;
-	RegenRate = 3.f;
 	HealthRegenRate = 5.f;
+
+	//Stamina Defaults
+	CurrentStamina = 50.f;
+	MaxStamina = 100.f;
+	StaminaRegenRate = 5.f;
+
+	RegenRate = 3.f;
 }
 
 
@@ -36,13 +43,19 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	// Replicate to every client, no special condition required
+	// Health Replicated Varibles
 	DOREPLIFETIME(UBaseStatsComponent, CurrentHealth);
 	DOREPLIFETIME(UBaseStatsComponent, MaxHealth);
+
+	//Stamina Replicated Varibles
+	DOREPLIFETIME(UBaseStatsComponent, CurrentStamina);
+	DOREPLIFETIME(UBaseStatsComponent, MaxStamina);
 }
 
 void UBaseStatsComponent::HandleBaseStats()
 {
 	HealthRegen(HealthRegenRate);
+	StaminaRegen(StaminaRegenRate);
 }
 
 void UBaseStatsComponent::HealthRegen(float healthRegen)
@@ -51,7 +64,7 @@ void UBaseStatsComponent::HealthRegen(float healthRegen)
 	{
 		ServerHealthRegen(healthRegen);
 	}
-	else
+	else if (GetOwnerRole() == ROLE_Authority)
 	{
 		if (CurrentHealth < MaxHealth)
 		{
@@ -60,9 +73,29 @@ void UBaseStatsComponent::HealthRegen(float healthRegen)
 	}
 }
 
+void UBaseStatsComponent::StaminaRegen(float staminaRegen)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerStaminaRegen(staminaRegen);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		if (CurrentStamina < MaxStamina)
+		{
+			CurrentStamina += staminaRegen;
+		}
+	}
+}
+
 bool UBaseStatsComponent::ServerHealthRegen_Validate(float serverHealthRegen)
 {
-	return false;
+	return true;
+}
+
+bool UBaseStatsComponent::ServerStaminaRegen_Validate(float serverStaminaRegen)
+{
+	return true;
 }
 
 void UBaseStatsComponent::ServerHealthRegen_Implementation(float serverHealthRegen)
@@ -70,6 +103,14 @@ void UBaseStatsComponent::ServerHealthRegen_Implementation(float serverHealthReg
 	if (GetOwnerRole() == ROLE_Authority)
 	{
 		HealthRegen(serverHealthRegen);
+	}
+}
+
+void UBaseStatsComponent::ServerStaminaRegen_Implementation(float serverStaminaRegen)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		StaminaRegen(serverStaminaRegen);
 	}
 }
 
@@ -81,4 +122,14 @@ float UBaseStatsComponent::GetCurrentHealth()
 float UBaseStatsComponent::GetMaxHealth()
 {
 	return MaxHealth;
+}
+
+float UBaseStatsComponent::GetCurrentStamina()
+{
+	return CurrentStamina;
+}
+
+float UBaseStatsComponent::GetMaxStamina()
+{
+	return MaxStamina;
 }
