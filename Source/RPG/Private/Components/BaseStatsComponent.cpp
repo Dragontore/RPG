@@ -15,6 +15,8 @@ UBaseStatsComponent::UBaseStatsComponent()
 {
 	CurrentHealth = 50.f;
 	MaxHealth = 100.f;
+	RegenRate = 3.f;
+	HealthRegenRate = 5.f;
 }
 
 
@@ -40,10 +42,33 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 void UBaseStatsComponent::HandleBaseStats()
 {
-
+	HealthRegen(HealthRegenRate);
 }
 
 void UBaseStatsComponent::HealthRegen(float healthRegen)
 {
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerHealthRegen(healthRegen);
+	}
+	else
+	{
+		if (CurrentHealth < MaxHealth)
+		{
+			CurrentHealth += healthRegen;
+		}
+	}
+}
 
+bool UBaseStatsComponent::ServerHealthRegen_Validate(float serverHealthRegen)
+{
+	return false;
+}
+
+void UBaseStatsComponent::ServerHealthRegen_Implementation(float serverHealthRegen)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		HealthRegen(serverHealthRegen);
+	}
 }

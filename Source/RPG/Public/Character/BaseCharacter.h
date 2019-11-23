@@ -8,6 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UBaseStatsComponent;
 
 UCLASS()
 class RPG_API ABaseCharacter : public ACharacter
@@ -33,6 +34,11 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float BaseLookUpRate;
+
+protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UBaseStatsComponent* BaseStatsComp;
 
 protected:
 

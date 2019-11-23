@@ -24,8 +24,12 @@ protected:
 	UPROPERTY(Replicated)
 	float MaxHealth;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "BaseStats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
 	float RegenRate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
+	float HealthRegenRate;
+
+	
 
 public:	
 	// Sets default values for this component's properties
@@ -37,6 +41,11 @@ protected:
 
 	//Handles the bas Stats regen
 	void HandleBaseStats();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerHealthRegen(float serverHealthRegen);
+	bool ServerHealthRegen_Validate(float serverHealthRegen);
+	void ServerHealthRegen_Implementation(float serverHealthRegen);
 
 public:	
 
