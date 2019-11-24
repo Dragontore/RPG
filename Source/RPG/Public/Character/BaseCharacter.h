@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBaseStatsComponent* BaseStatsComp;
 
+	//TODO possible add uproperty.
+	bool bIsSprinting;
+
 	//Function to display Health Bar
 	UFUNCTION(Blueprintpure, Category = "Stats")
 	float ReturnPlayersHealth();
@@ -63,6 +66,10 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+
+	void StartSprinting();
+
+	void StopSprinting();
 
 	/**
 	 * Called via input to turn at a given rate.

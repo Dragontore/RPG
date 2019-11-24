@@ -28,7 +28,7 @@ UBaseStatsComponent::UBaseStatsComponent()
 	MaxMana = 100.f;
 	ManaIncreaseRate = 5.f;
 
-	RegenRate = 3.f;
+	RegenRate = 1.f;
 }
 
 
