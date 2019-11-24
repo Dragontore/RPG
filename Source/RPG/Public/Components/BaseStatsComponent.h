@@ -25,7 +25,7 @@ protected:
 	UPROPERTY(Replicated)
 	float MaxHealth;
 
-	float HealthRegenRate;
+	float HealthIncreaseRate;
 
 	//Stamina Varibles
 	UPROPERTY(Replicated)
@@ -34,7 +34,7 @@ protected:
 	UPROPERTY(Replicated)
 	float MaxStamina;
 
-	float StaminaRegenRate;
+	float StaminaIncreaseRate;
 
 	//Mana Varibles
 	UPROPERTY(Replicated)
@@ -43,7 +43,7 @@ protected:
 	UPROPERTY(Replicated)
 	float MaxMana;
 
-	float ManaRegenRate;
+	float ManaIncreaseRate;
 
 	//Regenratiion rate for all stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
@@ -62,30 +62,86 @@ protected:
 	//Handles the base Stats regen
 	void HandleBaseStats();
 
-	// Health Stamina Functions
+	// Health Server Functions
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerHealthRegen(float serverHealthRegen);
-	bool ServerHealthRegen_Validate(float serverHealthRegen);
-	void ServerHealthRegen_Implementation(float serverHealthRegen);
+	void ServerIncreaseCurrentHealth(float serverCurrentHealthIncrease);
+	bool ServerIncreaseCurrentHealth_Validate(float serverCurrentHealthIncrease);
+	void ServerIncreaseCurrentHealth_Implementation(float serverCurrentHealthIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseCurrentHealth(float serverCurrentHealthDecrease);
+	bool ServerDecreaseCurrentHealth_Validate(float serverCurrentHealthDecrease);
+	void ServerDecreaseCurrentHealth_Implementation(float serverCurrentHealthDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseMaxHealth(float serverMaxHealthIncrease);
+	bool ServerIncreaseMaxHealth_Validate(float serverMaxHealthIncrease);
+	void ServerIncreaseMaxHealth_Implementation(float serverMaxHealthIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseMaxHealth(float serverMaxHealthDecrease);
+	bool ServerDecreaseMaxHealth_Validate(float serverMaxHealthDecrease);
+	void ServerDecreaseMaxHealth_Implementation(float serverMaxHealthDecrease);
 
 	//Stamina Server Functions
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerStaminaRegen(float serverStaminaRegen);
-	bool ServerStaminaRegen_Validate(float serverStaminaRegen);
-	void ServerStaminaRegen_Implementation(float serverStaminaRegen);
+	void ServerIncreaseCurrentStamina(float serverCurrentStaminaIncrease);
+	bool ServerIncreaseCurrentStamina_Validate(float serverCurrentStaminaIncrease);
+	void ServerIncreaseCurrentStamina_Implementation(float serverCurrentStaminaIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseCurrentStamina(float serverCurrentStaminaDecrease);
+	bool ServerDecreaseCurrentStamina_Validate(float serverCurrentStaminaDecrease);
+	void ServerDecreaseCurrentStamina_Implementation(float serverCurrentSaminaDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseMaxStamina(float serverMaxStaminaIncrease);
+	bool ServerIncreaseMaxStamina_Validate(float serverMaxStaminaIncrease);
+	void ServerIncreaseMaxStamina_Implementation(float serverMaxStaminaIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseMaxStamina(float serverMaxStaminaDecrease);
+	bool ServerDecreaseMaxStamina_Validate(float serverMaxStaminaDecrease);
+	void ServerDecreaseMaxStamina_Implementation(float serverMaxStaminaDecrease);
 
 	//Mana Server Function
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerManaRegen(float serverManaRegen);
-	bool ServerManaRegen_Validate(float serverManaRegen);
-	void ServerManaRegen_Implementation(float serverManaRegen);
+	void ServerIncreaseCurrentMana(float serverCurrentManaIncrease);
+	bool ServerIncreaseCurrentMana_Validate(float serverCurrentManaIncrease);
+	void ServerIncreaseCurrentMana_Implementation(float serverCurrentManaIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseCurrentMana(float serverCurrentManaDecrease);
+	bool ServerDecreaseCurrentMana_Validate(float serverCurrentManaDecrease);
+	void ServerDecreaseCurrentMana_Implementation(float serverCurrentManaDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseMaxMana(float serverMaxManaIncrease);
+	bool ServerIncreaseMaxMana_Validate(float serverMaxManaIncrease);
+	void ServerIncreaseMaxMana_Implementation(float serverMaxManaIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseMaxMana(float serverMaxManaDecrease);
+	bool ServerDecreaseMaxMana_Validate(float serverMaxManaDecrease);
+	void ServerDecreaseMaxMana_Implementation(float serverMaxManaDecrease);
+
 public:	
+
 	// Non Server Health Function
-	void HealthRegen(float healthRegen);
+	void IncreaseCurrentHealth(float healthIncrease);
+	void IncreaseMaxHealth(float healthIncrease);
+	void DecreaseCurrentHealth(float healthDecrease);
+	void DecreaseMaxHealth(float healthDecrease);
 	// Non Server Stamina Function
-	void StaminaRegen(float StaminaRegen);
+	void IncreaseCurrentStamina(float StaminaIncrease);
+	void IncreaseMaxStamina(float StaminaIncrease);
+	void DecreaseCurrentStamina(float StaminaDecrease);
+	void DecreaseMaxStamina(float StaminaDecrease);
 	// Non Server Mana Function
-	void ManaRegen(float ManaRegen);
+	void IncreaseCurrentMana(float ManaIncrease);
+	void IncreaseMaxMana(float ManaIncrease);
+	void DecreaseCurrentMana(float ManaDecrease);
+	void DecreaseMaxMana(float ManaDecrease);
 
 	// Health Getter Function
 	UFUNCTION(BlueprintCallable, Category = "Getter")
