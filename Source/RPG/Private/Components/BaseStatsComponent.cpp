@@ -19,16 +19,19 @@ UBaseStatsComponent::UBaseStatsComponent()
 	CurrentHealth = 50.f;
 	MaxHealth = 100.f;
 	HealthIncreaseRate = 5.f;
+	HealthDecreaseRate = 5.f;
 
 	//Stamina Defaults
 	CurrentStamina = 50.f;
 	MaxStamina = 100.f;
 	StaminaIncreaseRate = 5.f;
+	StaminaDecreaseRate = 5.f;
 
 	// Mana Defaults
 	CurrentMana = 50.f;
 	MaxMana = 100.f;
 	ManaIncreaseRate = 5.f;
+	ManaDecreaseRate = 5.f;
 
 	HealthRegenRate = 1.f;
 	StaminaRegenRate = 1.f;
@@ -43,10 +46,15 @@ void UBaseStatsComponent::BeginPlay()
 
 	SetIsReplicated(true);
 
-	GetWorld()->GetTimerManager().SetTimer(HealthTimerHandle, this, &UBaseStatsComponent::HandleHealthStats, HealthRegenRate, true);
-	GetWorld()->GetTimerManager().SetTimer(StaminaTimerHandle, this, &UBaseStatsComponent::HandleStaminaStats, StaminaRegenRate, true);
-	GetWorld()->GetTimerManager().SetTimer(ManaTimerHandle, this, &UBaseStatsComponent::HandleManaStats, ManaRegenRate, true);
-	
+	GetWorld()->GetTimerManager().SetTimer(HealthIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseHealthStats, HealthRegenRate, true);
+	GetWorld()->GetTimerManager().SetTimer(StaminaIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseStaminaStats, StaminaRegenRate, true);
+	GetWorld()->GetTimerManager().SetTimer(ManaIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseManaStats, ManaRegenRate, true);
+	GetWorld()->GetTimerManager().SetTimer(HealthDecreaseTimerHandle, this, &UBaseStatsComponent::HandleDecreaseHealthStats, StaminaRegenRate, true);
+	GetWorld()->GetTimerManager().SetTimer(StaminaDecreaseTimerHandle, this, &UBaseStatsComponent::HandleDecreaseStaminaStats, StaminaRegenRate, true);
+	GetWorld()->GetTimerManager().SetTimer(ManaDecreaseTimerHandle, this, &UBaseStatsComponent::HandleDecreaseManaStats, ManaRegenRate, true);
+	GetWorld()->GetTimerManager().PauseTimer(HealthDecreaseTimerHandle);
+	GetWorld()->GetTimerManager().PauseTimer(StaminaDecreaseTimerHandle);
+	GetWorld()->GetTimerManager().PauseTimer(ManaDecreaseTimerHandle);
 }
 
 void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -67,19 +75,34 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(UBaseStatsComponent, MaxMana);
 }
 
-void UBaseStatsComponent::HandleHealthStats()
+void UBaseStatsComponent::HandleIncreaseHealthStats()
 {
 	IncreaseCurrentHealth(HealthIncreaseRate);
 }
 
-void UBaseStatsComponent::HandleStaminaStats()
+void UBaseStatsComponent::HandleDecreaseHealthStats()
+{
+	DecreaseCurrentHealth(HealthDecreaseRate);
+}
+
+void UBaseStatsComponent::HandleIncreaseStaminaStats()
 {
 	IncreaseCurrentStamina(StaminaIncreaseRate);
 }
 
-void UBaseStatsComponent::HandleManaStats()
+void UBaseStatsComponent::HandleDecreaseStaminaStats()
+{
+	DecreaseCurrentStamina(StaminaDecreaseRate);
+}
+
+void UBaseStatsComponent::HandleIncreaseManaStats()
 {
 	IncreaseCurrentMana(ManaIncreaseRate);
+}
+
+void UBaseStatsComponent::HandleDecreaseManaStats()
+{
+	DecreaseCurrentMana(ManaDecreaseRate);
 }
 
 void UBaseStatsComponent::IncreaseCurrentHealth(float healthIncrease)
@@ -90,13 +113,14 @@ void UBaseStatsComponent::IncreaseCurrentHealth(float healthIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		GetWorld()->GetTimerManager().UnPauseTimer(HealthTimerHandle);
+		GetWorld()->GetTimerManager().UnPauseTimer(HealthIncreaseTimerHandle);
+		GetWorld()->GetTimerManager().PauseTimer(HealthDecreaseTimerHandle);
 		CurrentHealth += healthIncrease;
 
 		if (CurrentHealth >= MaxHealth)
 		{
 			CurrentHealth = MaxHealth;
-			GetWorld()->GetTimerManager().PauseTimer(HealthTimerHandle);
+			GetWorld()->GetTimerManager().PauseTimer(HealthIncreaseTimerHandle);
 		}
 	}
 }
@@ -110,7 +134,8 @@ void UBaseStatsComponent::DecreaseCurrentHealth(float healthDecrease)
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
 		CurrentHealth -= healthDecrease;
-		GetWorld()->GetTimerManager().PauseTimer(HealthTimerHandle);
+		GetWorld()->GetTimerManager().PauseTimer(HealthIncreaseTimerHandle);
+		GetWorld()->GetTimerManager().UnPauseTimer(HealthDecreaseTimerHandle);
 
 		if (CurrentHealth == 0)
 		{
@@ -176,13 +201,14 @@ void UBaseStatsComponent::IncreaseCurrentStamina(float staminaIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		GetWorld()->GetTimerManager().UnPauseTimer(StaminaTimerHandle);
+		GetWorld()->GetTimerManager().UnPauseTimer(StaminaIncreaseTimerHandle);
+		GetWorld()->GetTimerManager().PauseTimer(StaminaDecreaseTimerHandle);
 		CurrentStamina += staminaIncrease;
 
 		if (CurrentStamina >= MaxStamina)
 		{
 			CurrentStamina = MaxStamina;
-			GetWorld()->GetTimerManager().PauseTimer(StaminaTimerHandle);
+			GetWorld()->GetTimerManager().PauseTimer(StaminaIncreaseTimerHandle);
 		}
 	}
 }
@@ -197,7 +223,8 @@ void UBaseStatsComponent::DecreaseCurrentStamina(float staminaDecrease)
 	{
 
 		CurrentStamina -= staminaDecrease;
-		GetWorld()->GetTimerManager().PauseTimer(StaminaTimerHandle);
+		GetWorld()->GetTimerManager().PauseTimer(StaminaIncreaseTimerHandle);
+		GetWorld()->GetTimerManager().UnPauseTimer(StaminaDecreaseTimerHandle);
 		if (CurrentStamina == 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Exhausted"));
@@ -262,13 +289,14 @@ void UBaseStatsComponent::IncreaseCurrentMana(float manaIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		GetWorld()->GetTimerManager().UnPauseTimer(ManaTimerHandle);
+		GetWorld()->GetTimerManager().UnPauseTimer(ManaIncreaseTimerHandle);
+		GetWorld()->GetTimerManager().PauseTimer(ManaDecreaseTimerHandle);
 		CurrentMana += manaIncrease;
 
 		if (CurrentMana >= MaxMana)
 		{
 			CurrentMana = MaxMana;
-			GetWorld()->GetTimerManager().PauseTimer(ManaTimerHandle);
+			GetWorld()->GetTimerManager().PauseTimer(ManaIncreaseTimerHandle);
 		}
 	}
 }
@@ -282,7 +310,8 @@ void UBaseStatsComponent::DecreaseCurrentMana(float manaDecrease)
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
 		CurrentMana -= manaDecrease;
-		GetWorld()->GetTimerManager().PauseTimer(ManaTimerHandle);
+		GetWorld()->GetTimerManager().PauseTimer(ManaIncreaseTimerHandle);
+		GetWorld()->GetTimerManager().UnPauseTimer(ManaDecreaseTimerHandle);
 		if (CurrentMana == 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("No Mana"));

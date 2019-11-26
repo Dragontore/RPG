@@ -17,9 +17,12 @@ public:
 
 protected:
 
-	FTimerHandle HealthTimerHandle;
-	FTimerHandle StaminaTimerHandle;
-	FTimerHandle ManaTimerHandle;
+	FTimerHandle HealthIncreaseTimerHandle;
+	FTimerHandle StaminaIncreaseTimerHandle;
+	FTimerHandle ManaIncreaseTimerHandle;
+	FTimerHandle HealthDecreaseTimerHandle;
+	FTimerHandle StaminaDecreaseTimerHandle;
+	FTimerHandle ManaDecreaseTimerHandle;
 
 	// Health Varibles
 	UPROPERTY(Replicated)
@@ -29,6 +32,7 @@ protected:
 	float MaxHealth;
 
 	float HealthIncreaseRate;
+	float HealthDecreaseRate;
 
 	//Stamina Varibles
 	UPROPERTY(Replicated)
@@ -38,6 +42,7 @@ protected:
 	float MaxStamina;
 
 	float StaminaIncreaseRate;
+	float StaminaDecreaseRate;
 
 	//Mana Varibles
 	UPROPERTY(Replicated)
@@ -47,6 +52,7 @@ protected:
 	float MaxMana;
 
 	float ManaIncreaseRate;
+	float ManaDecreaseRate;
 
 	//Regenratiion rate for Health stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
@@ -60,7 +66,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
 	float ManaRegenRate;
 
-	ABaseCharacter* BaseCharacter;
+	ABaseCharacter* BaseCharacter = nullptr;
 
 	
 
@@ -72,14 +78,17 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	//Handles the Health Stats regen
-	void HandleHealthStats();
+	//Handles the Health Stats regen/Degen
+	void HandleIncreaseHealthStats();
+	void HandleDecreaseHealthStats();
 
-	//Handles the Stamina Stats Regen
-	void HandleStaminaStats();
+	//Handles the Stamina Stats Regen/Degen
+	void HandleIncreaseStaminaStats();
+	void HandleDecreaseStaminaStats();
 
-	//Handle the Mana Stats Regen
-	void HandleManaStats();
+	//Handle the Mana Stats Regen/Degen
+	void HandleIncreaseManaStats();
+	void HandleDecreaseManaStats();
 
 	// Health Server Functions
 	UFUNCTION(Server, Reliable, WithValidation)
