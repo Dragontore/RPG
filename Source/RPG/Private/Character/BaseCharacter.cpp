@@ -137,10 +137,8 @@ void ABaseCharacter::StartSprinting()
 	float CurrentStamina = BaseStatsComp->GetCurrentStamina();
 	float CurrentSprintCost = GetSprintCost();
 
-	UE_LOG(LogTemp, Warning, TEXT("Current Stamina: %f and Sprint Coat: %f"), CurrentStamina, CurrentSprintCost);
 	if (CurrentStamina > CurrentSprintCost)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Sprint Called"));
 		bIsSprinting = true;
 		BaseStatsComp->DecreaseCurrentStamina(CurrentSprintCost);
 	}

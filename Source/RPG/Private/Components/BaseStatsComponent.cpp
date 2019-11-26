@@ -36,6 +36,8 @@ UBaseStatsComponent::UBaseStatsComponent()
 	HealthRegenRate = 1.f;
 	StaminaRegenRate = 1.f;
 	ManaRegenRate = 1.f;
+
+	BaseCharacter = Cast<ABaseCharacter>(GetOwner());
 }
 
 
@@ -46,6 +48,11 @@ void UBaseStatsComponent::BeginPlay()
 
 	SetIsReplicated(true);
 
+	SetTimers();
+}
+
+void UBaseStatsComponent::SetTimers()
+{
 	GetWorld()->GetTimerManager().SetTimer(HealthIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseHealthStats, HealthRegenRate, true);
 	GetWorld()->GetTimerManager().SetTimer(StaminaIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseStaminaStats, StaminaRegenRate, true);
 	GetWorld()->GetTimerManager().SetTimer(ManaIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseManaStats, ManaRegenRate, true);
@@ -221,15 +228,16 @@ void UBaseStatsComponent::DecreaseCurrentStamina(float staminaDecrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-
 		CurrentStamina -= staminaDecrease;
 		GetWorld()->GetTimerManager().PauseTimer(StaminaIncreaseTimerHandle);
 		GetWorld()->GetTimerManager().UnPauseTimer(StaminaDecreaseTimerHandle);
-		if (CurrentStamina == 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Exhausted"));
-			BaseCharacter->StopSprinting();
-		}
+
+			if (CurrentStamina <=0.f)
+			{
+
+				BaseCharacter->StopSprinting();
+			}
+
 	}
 }
 

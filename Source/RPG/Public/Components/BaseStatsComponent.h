@@ -66,7 +66,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
 	float ManaRegenRate;
 
-	ABaseCharacter* BaseCharacter = nullptr;
+	ABaseCharacter* BaseCharacter;
 
 	
 
@@ -77,6 +77,8 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	void SetTimers();
 
 	//Handles the Health Stats regen/Degen
 	void HandleIncreaseHealthStats();
