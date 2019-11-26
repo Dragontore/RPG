@@ -49,6 +49,7 @@ ABaseCharacter::ABaseCharacter()
 
 	//Default for Sprinting
 	bIsSprinting = false;
+	SprintCost = 5.f;
 }
 
 // Called when the game starts or when spawned
@@ -133,12 +134,72 @@ void ABaseCharacter::MoveRight(float Value)
 
 void ABaseCharacter::StartSprinting()
 {
-	bIsSprinting = true;
+	if (BaseStatsComp->GetCurrentStamina() < GetSprintCost())
+	{
+		bIsSprinting = true;
+		BaseStatsComp->DecreaseCurrentStamina(SprintCost);
+	}
 }
 
 void ABaseCharacter::StopSprinting()
 {
 	bIsSprinting = false;
+	BaseStatsComp->IncreaseCurrentStamina(1.f);
+}
+
+float ABaseCharacter::GetSprintCost()
+{
+	return SprintCost;
+}
+
+void ABaseCharacter::IncreaseSprintCost(float sprintCostIncrease)
+{
+	if (Role < ROLE_Authority)
+	{
+
+	}
+	else if (Role == ROLE_Authority)
+	{
+		SprintCost += sprintCostIncrease;
+	}
+}
+
+void ABaseCharacter::DecreaseSprintCost(float sprintCostDecrease)
+{
+	if (Role < ROLE_Authority)
+	{
+
+	}
+	else if (Role == ROLE_Authority)
+	{
+		SprintCost -= sprintCostDecrease;
+	}
+}
+
+bool ABaseCharacter::ServerIncreaseSprintCost_Validate(float serverSprintCostIncrease)
+{
+	return true;
+}
+
+void ABaseCharacter::ServerIncreaseSprintCost_Implementation(float serverSprintCostIncrease)
+{
+	if (Role == ROLE_Authority)
+	{
+		IncreaseSprintCost(serverSprintCostIncrease);
+	}
+}
+
+bool ABaseCharacter::ServerDecreaseSprintCost_Validate(float serverSprintCostDecrease)
+{
+	return true;
+}
+
+void ABaseCharacter::ServerDecreaseSprintCost_Implementation(float serverSprintCostDecrease)
+{
+	if (Role == ROLE_Authority)
+	{
+		DecreaseSprintCost(serverSprintCostDecrease);
+	}
 }
 
 float ABaseCharacter::ReturnPlayersHealth()

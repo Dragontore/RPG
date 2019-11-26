@@ -8,6 +8,8 @@
 #include "Engine/Engine.h"
 #include "TimerManager.h"
 
+#include "Character/BaseCharacter.h"
+
 
 
 // Sets default values for this component's properties
@@ -88,6 +90,7 @@ void UBaseStatsComponent::IncreaseCurrentHealth(float healthIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
+		GetWorld()->GetTimerManager().UnPauseTimer(HealthTimerHandle);
 		CurrentHealth += healthIncrease;
 
 		if (CurrentHealth >= MaxHealth)
@@ -173,8 +176,9 @@ void UBaseStatsComponent::IncreaseCurrentStamina(float staminaIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-
+		GetWorld()->GetTimerManager().UnPauseTimer(StaminaTimerHandle);
 		CurrentStamina += staminaIncrease;
+
 		if (CurrentStamina >= MaxStamina)
 		{
 			CurrentStamina = MaxStamina;
@@ -197,6 +201,7 @@ void UBaseStatsComponent::DecreaseCurrentStamina(float staminaDecrease)
 		if (CurrentStamina == 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Exhausted"));
+			BaseCharacter->StopSprinting();
 		}
 	}
 }
@@ -257,6 +262,7 @@ void UBaseStatsComponent::IncreaseCurrentMana(float manaIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
+		GetWorld()->GetTimerManager().UnPauseTimer(ManaTimerHandle);
 		CurrentMana += manaIncrease;
 
 		if (CurrentMana >= MaxMana)

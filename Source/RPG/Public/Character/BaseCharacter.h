@@ -35,13 +35,20 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float BaseLookUpRate;
 
+	// Sprint Functions
+	void StartSprinting();
+
+	void StopSprinting();
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBaseStatsComponent* BaseStatsComp;
 
-	//TODO possible add uproperty.
+	//Sprint Varibles
+	//TODO possible add uproperty. 
 	bool bIsSprinting;
+	float SprintCost;
 
 	//Function to display Health Bar
 	UFUNCTION(Blueprintpure, Category = "Stats")
@@ -67,9 +74,26 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	void StartSprinting();
+	// Sprint Functions
+	UFUNCTION(BlueprintCallable, Category = "Sprint")
+	float GetSprintCost();
 
-	void StopSprinting();
+	UFUNCTION(BlueprintCallable, Category = "Sprint")
+	void IncreaseSprintCost(float sprintCostIncrease);
+
+	UFUNCTION(BlueprintCallable, Category = "Sprint")
+	void DecreaseSprintCost(float sprintCostDecrease);
+
+	//Sprint Server Functions
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseSprintCost(float serverSprintCostIncrease);
+	bool ServerIncreaseSprintCost_Validate(float serverSprintCostIncrease);
+	void ServerIncreaseSprintCost_Implementation(float serverSprintCostIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseSprintCost(float serverSprintCostDecrease);
+	bool ServerDecreaseSprintCost_Validate(float serverSprintCostDecrease);
+	void ServerDecreaseSprintCost_Implementation(float serverSprintCostDecrease);
 
 	/**
 	 * Called via input to turn at a given rate.

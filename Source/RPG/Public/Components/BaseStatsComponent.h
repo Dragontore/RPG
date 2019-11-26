@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "BaseStatsComponent.generated.h"
 
+class ABaseCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPG_API UBaseStatsComponent : public UActorComponent
@@ -58,6 +59,8 @@ protected:
 	//Regenratiion rate for Health stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStats")
 	float ManaRegenRate;
+
+	ABaseCharacter* BaseCharacter;
 
 	
 
