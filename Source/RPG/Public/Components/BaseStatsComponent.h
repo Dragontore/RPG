@@ -17,12 +17,10 @@ public:
 
 protected:
 
-	FTimerHandle HealthIncreaseTimerHandle;
-	FTimerHandle StaminaIncreaseTimerHandle;
-	FTimerHandle ManaIncreaseTimerHandle;
-	FTimerHandle HealthDecreaseTimerHandle;
-	FTimerHandle StaminaDecreaseTimerHandle;
-	FTimerHandle ManaDecreaseTimerHandle;
+	FTimerHandle HealthTimerHandle;
+	FTimerHandle StaminaTimerHandle;
+	FTimerHandle ManaTimerHandle;
+
 
 	// Health Varibles
 	UPROPERTY(Replicated)
@@ -239,4 +237,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Mana Getter")
 	float GetManaRegenRate();
 
+	//Character Functions
+
+	void ControlSprintingTimer(bool IsSprinting);
 };

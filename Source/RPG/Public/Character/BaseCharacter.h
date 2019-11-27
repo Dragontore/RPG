@@ -62,6 +62,12 @@ protected:
 	UFUNCTION(Blueprintpure, Category = "Stats")
 	float ReturnPlayerMana();
 
+	FTimerHandle SprintingHandle;
+
+	void HandleSprinting();
+
+	float SprintTime;
+
 
 protected:
 
@@ -85,6 +91,17 @@ protected:
 	void DecreaseSprintCost(float sprintCostDecrease);
 
 	//Sprint Server Functions
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerStartSprinting();
+	bool ServerStartSprinting_Validate();
+	void ServerStartSprinting_Implementation();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerStopSprinting();
+	bool ServerStopSprinting_Validate();
+	void ServerStopSprinting_Implementation();
+
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseSprintCost(float serverSprintCostIncrease);
 	bool ServerIncreaseSprintCost_Validate(float serverSprintCostIncrease);

@@ -10,6 +10,8 @@
 #include "GameFramework/Controller.h" // may need to remove
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/World.h"
+#include "Engine/Engine.h"
+#include "TimerManager.h"
 
 #include "Components/BaseStatsComponent.h"
 
@@ -50,12 +52,15 @@ ABaseCharacter::ABaseCharacter()
 	//Default for Sprinting
 	bIsSprinting = false;
 	SprintCost = 5.f;
+	SprintTime = 1.f;
 }
 
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetWorld()->GetTimerManager().SetTimer(SprintingHandle, this, &ABaseCharacter::HandleSprinting, SprintTime, true);
 	
 }
 
@@ -136,18 +141,43 @@ void ABaseCharacter::StartSprinting()
 {
 	float CurrentStamina = BaseStatsComp->GetCurrentStamina();
 	float CurrentSprintCost = GetSprintCost();
-
-	if (CurrentStamina > CurrentSprintCost)
+	if (Role < ROLE_Authority)
 	{
-		bIsSprinting = true;
-		BaseStatsComp->DecreaseCurrentStamina(CurrentSprintCost);
+		ServerStartSprinting();
+	}
+	else if (Role == ROLE_Authority)
+	{
+		if (CurrentStamina > CurrentSprintCost)
+		{
+			bIsSprinting = true;
+			BaseStatsComp->ControlSprintingTimer(true);
+		}
+		else if (CurrentStamina <= 0.0f)
+		{
+			BaseStatsComp->ControlSprintingTimer(false);
+		}
 	}
 }
 
 void ABaseCharacter::StopSprinting()
 {
-	bIsSprinting = false;
-	BaseStatsComp->IncreaseCurrentStamina(1.f);
+	if (Role < ROLE_Authority)
+	{
+		ServerStopSprinting();
+	}
+	else if (Role == ROLE_Authority)
+	{
+		bIsSprinting = false;
+	}
+
+}
+
+void ABaseCharacter::HandleSprinting()
+{
+	if (bIsSprinting)
+	{
+		BaseStatsComp->DecreaseCurrentStamina(SprintCost);
+	}
 }
 
 float ABaseCharacter::GetSprintCost()
@@ -159,7 +189,7 @@ void ABaseCharacter::IncreaseSprintCost(float sprintCostIncrease)
 {
 	if (Role < ROLE_Authority)
 	{
-
+		ServerIncreaseSprintCost(sprintCostIncrease);
 	}
 	else if (Role == ROLE_Authority)
 	{
@@ -171,7 +201,7 @@ void ABaseCharacter::DecreaseSprintCost(float sprintCostDecrease)
 {
 	if (Role < ROLE_Authority)
 	{
-
+		ServerDecreaseSprintCost(sprintCostDecrease);
 	}
 	else if (Role == ROLE_Authority)
 	{
@@ -201,6 +231,7 @@ void ABaseCharacter::ServerDecreaseSprintCost_Implementation(float serverSprintC
 {
 	if (Role == ROLE_Authority)
 	{
+
 		DecreaseSprintCost(serverSprintCostDecrease);
 	}
 }
@@ -231,4 +262,29 @@ float ABaseCharacter::ReturnPlayerMana()
 	float RetMana = RetCurrentMana / RetMaxMana;
 
 	return RetMana;
+}
+
+bool ABaseCharacter::ServerStartSprinting_Validate()
+{
+	return true;
+}
+
+void ABaseCharacter::ServerStartSprinting_Implementation()
+{
+	if (Role == ROLE_Authority)
+	{
+		StartSprinting();
+	}
+}
+bool ABaseCharacter::ServerStopSprinting_Validate()
+{
+	return true;
+}
+
+void ABaseCharacter::ServerStopSprinting_Implementation()
+{
+	if (Role == ROLE_Authority)
+	{
+		StopSprinting();
+	}
 }

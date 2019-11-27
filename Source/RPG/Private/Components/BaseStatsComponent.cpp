@@ -22,7 +22,7 @@ UBaseStatsComponent::UBaseStatsComponent()
 	HealthDecreaseRate = 5.f;
 
 	//Stamina Defaults
-	CurrentStamina = 50.f;
+	CurrentStamina = 100.f;
 	MaxStamina = 100.f;
 	StaminaIncreaseRate = 5.f;
 	StaminaDecreaseRate = 5.f;
@@ -53,15 +53,9 @@ void UBaseStatsComponent::BeginPlay()
 
 void UBaseStatsComponent::SetTimers()
 {
-	GetWorld()->GetTimerManager().SetTimer(HealthIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseHealthStats, HealthRegenRate, true);
-	GetWorld()->GetTimerManager().SetTimer(StaminaIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseStaminaStats, StaminaRegenRate, true);
-	GetWorld()->GetTimerManager().SetTimer(ManaIncreaseTimerHandle, this, &UBaseStatsComponent::HandleIncreaseManaStats, ManaRegenRate, true);
-	GetWorld()->GetTimerManager().SetTimer(HealthDecreaseTimerHandle, this, &UBaseStatsComponent::HandleDecreaseHealthStats, StaminaRegenRate, true);
-	GetWorld()->GetTimerManager().SetTimer(StaminaDecreaseTimerHandle, this, &UBaseStatsComponent::HandleDecreaseStaminaStats, StaminaRegenRate, true);
-	GetWorld()->GetTimerManager().SetTimer(ManaDecreaseTimerHandle, this, &UBaseStatsComponent::HandleDecreaseManaStats, ManaRegenRate, true);
-	GetWorld()->GetTimerManager().PauseTimer(HealthDecreaseTimerHandle);
-	GetWorld()->GetTimerManager().PauseTimer(StaminaDecreaseTimerHandle);
-	GetWorld()->GetTimerManager().PauseTimer(ManaDecreaseTimerHandle);
+	GetWorld()->GetTimerManager().SetTimer(HealthTimerHandle, this, &UBaseStatsComponent::HandleIncreaseHealthStats, HealthRegenRate, true);
+	GetWorld()->GetTimerManager().SetTimer(StaminaTimerHandle, this, &UBaseStatsComponent::HandleIncreaseStaminaStats, StaminaRegenRate, true);
+	GetWorld()->GetTimerManager().SetTimer(ManaTimerHandle, this, &UBaseStatsComponent::HandleIncreaseManaStats, ManaRegenRate, true);
 }
 
 void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -120,14 +114,14 @@ void UBaseStatsComponent::IncreaseCurrentHealth(float healthIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		GetWorld()->GetTimerManager().UnPauseTimer(HealthIncreaseTimerHandle);
-		GetWorld()->GetTimerManager().PauseTimer(HealthDecreaseTimerHandle);
-		CurrentHealth += healthIncrease;
 
 		if (CurrentHealth >= MaxHealth)
 		{
 			CurrentHealth = MaxHealth;
-			GetWorld()->GetTimerManager().PauseTimer(HealthIncreaseTimerHandle);
+		}
+		else
+		{
+			CurrentHealth += healthIncrease;
 		}
 	}
 }
@@ -140,13 +134,14 @@ void UBaseStatsComponent::DecreaseCurrentHealth(float healthDecrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		CurrentHealth -= healthDecrease;
-		GetWorld()->GetTimerManager().PauseTimer(HealthIncreaseTimerHandle);
-		GetWorld()->GetTimerManager().UnPauseTimer(HealthDecreaseTimerHandle);
 
 		if (CurrentHealth == 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Dead"));
+		}
+		else
+		{
+			CurrentHealth -= healthDecrease;
 		}
 	}
 }
@@ -167,7 +162,7 @@ void UBaseStatsComponent::IncreaseHealthRegenRate(float healthRegenIncrease)
 {
 	if (GetOwnerRole() < ROLE_Authority)
 	{
-
+		ServerIncreaseHealthRegen(healthRegenIncrease);
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -192,7 +187,7 @@ void UBaseStatsComponent::DecreaseHealthRegenRate(float healthRegenDecrease)
 {
 	if (GetOwnerRole() < ROLE_Authority)
 	{
-		
+		ServerDecreaseHealthRegen(healthRegenDecrease);
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -208,15 +203,17 @@ void UBaseStatsComponent::IncreaseCurrentStamina(float staminaIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		GetWorld()->GetTimerManager().UnPauseTimer(StaminaIncreaseTimerHandle);
-		GetWorld()->GetTimerManager().PauseTimer(StaminaDecreaseTimerHandle);
-		CurrentStamina += staminaIncrease;
 
-		if (CurrentStamina >= MaxStamina)
-		{
-			CurrentStamina = MaxStamina;
-			GetWorld()->GetTimerManager().PauseTimer(StaminaIncreaseTimerHandle);
-		}
+
+			if (CurrentStamina >= MaxStamina)
+			{
+				CurrentStamina = MaxStamina;
+			}
+			else
+			{
+				CurrentStamina += staminaIncrease;
+			}
+
 	}
 }
 
@@ -225,19 +222,18 @@ void UBaseStatsComponent::DecreaseCurrentStamina(float staminaDecrease)
 	if (GetOwnerRole() < ROLE_Authority)
 	{
 		ServerDecreaseCurrentStamina(staminaDecrease);
+
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		CurrentStamina -= staminaDecrease;
-		GetWorld()->GetTimerManager().PauseTimer(StaminaIncreaseTimerHandle);
-		GetWorld()->GetTimerManager().UnPauseTimer(StaminaDecreaseTimerHandle);
-
-			if (CurrentStamina <=0.f)
-			{
-
-				BaseCharacter->StopSprinting();
-			}
-
+		if (CurrentStamina == 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("You are Exhaushed"))
+		}
+		else
+		{
+			CurrentStamina -= staminaDecrease;
+		}
 	}
 }
 
@@ -297,14 +293,15 @@ void UBaseStatsComponent::IncreaseCurrentMana(float manaIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		GetWorld()->GetTimerManager().UnPauseTimer(ManaIncreaseTimerHandle);
-		GetWorld()->GetTimerManager().PauseTimer(ManaDecreaseTimerHandle);
-		CurrentMana += manaIncrease;
+
 
 		if (CurrentMana >= MaxMana)
 		{
 			CurrentMana = MaxMana;
-			GetWorld()->GetTimerManager().PauseTimer(ManaIncreaseTimerHandle);
+		}
+		else
+		{
+			CurrentMana += manaIncrease;
 		}
 	}
 }
@@ -317,12 +314,15 @@ void UBaseStatsComponent::DecreaseCurrentMana(float manaDecrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		CurrentMana -= manaDecrease;
-		GetWorld()->GetTimerManager().PauseTimer(ManaIncreaseTimerHandle);
-		GetWorld()->GetTimerManager().UnPauseTimer(ManaDecreaseTimerHandle);
+
+
 		if (CurrentMana == 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("No Mana"));
+		}
+		else
+		{
+			CurrentMana -= manaDecrease;
 		}
 	}
 }
@@ -343,7 +343,7 @@ void UBaseStatsComponent::IncreaseManaRegenRate(float manaRegenIncrease)
 {
 	if (GetOwnerRole() < ROLE_Authority)
 	{
-
+		ServerIncreaseManaRegen(manaRegenIncrease);
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -367,7 +367,7 @@ void UBaseStatsComponent::DecreaseManaRegenRate(float manaRegenDecrease)
 {
 	if (GetOwnerRole() < ROLE_Authority)
 	{
-
+		ServerDecreaseManaRegen(manaRegenDecrease);
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -595,8 +595,6 @@ void UBaseStatsComponent::ServerDecreaseMaxMana_Implementation(float serverManaD
 	}
 }
 
-
-
 void UBaseStatsComponent::ServerIncreaseManaRegen_Implementation(float serverManaRegenIncrease)
 {
 	if (GetOwnerRole() == ROLE_Authority)
@@ -604,8 +602,6 @@ void UBaseStatsComponent::ServerIncreaseManaRegen_Implementation(float serverMan
 		IncreaseManaRegenRate(serverManaRegenIncrease);
 	}
 }
-
-
 
 void UBaseStatsComponent::ServerDecreaseManaRegen_Implementation(float serverManaRegenDecrease)
 {
@@ -658,4 +654,16 @@ float UBaseStatsComponent::GetMaxMana()
 float UBaseStatsComponent::GetManaRegenRate()
 {
 	return ManaRegenRate;
+}
+
+void UBaseStatsComponent::ControlSprintingTimer(bool IsSprinting)
+{
+	if (IsSprinting)
+	{
+		GetWorld()->GetTimerManager().PauseTimer(StaminaTimerHandle);
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().UnPauseTimer(StaminaTimerHandle);
+	}
 }
