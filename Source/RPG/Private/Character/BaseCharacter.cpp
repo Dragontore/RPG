@@ -118,7 +118,10 @@ void ABaseCharacter::MoveForward(float Value)
 
 		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+		if (!bIsSprinting)
+			Value *= 0.5f;
+			AddMovementInput(Direction, Value);
+		
 	}
 }
 
@@ -133,6 +136,8 @@ void ABaseCharacter::MoveRight(float Value)
 		// get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
+		if (!bIsSprinting)
+			Value *= 0.5f;
 		AddMovementInput(Direction, Value);
 	}
 }
@@ -152,7 +157,7 @@ void ABaseCharacter::StartSprinting()
 			bIsSprinting = true;
 			BaseStatsComp->ControlSprintingTimer(true);
 		}
-		else if (CurrentStamina <= 0.0f)
+		else if (CurrentStamina == 0.0f)
 		{
 			BaseStatsComp->ControlSprintingTimer(false);
 		}
@@ -168,6 +173,8 @@ void ABaseCharacter::StopSprinting()
 	else if (Role == ROLE_Authority)
 	{
 		bIsSprinting = false;
+		BaseStatsComp->ControlSprintingTimer(false);
+
 	}
 
 }
@@ -286,5 +293,18 @@ void ABaseCharacter::ServerStopSprinting_Implementation()
 	if (Role == ROLE_Authority)
 	{
 		StopSprinting();
+	}
+}
+
+bool ABaseCharacter::ServerHandleSprinting_Validate()
+{
+	return true;
+}
+
+void ABaseCharacter::ServerHandleSprinting_Implementation()
+{
+	if (Role == ROLE_Authority)
+	{
+		HandleSprinting();
 	}
 }

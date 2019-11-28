@@ -103,6 +103,11 @@ protected:
 	void ServerStopSprinting_Implementation();
 
 	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerHandleSprinting();
+	bool ServerHandleSprinting_Validate();
+	void ServerHandleSprinting_Implementation();
+
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseSprintCost(float serverSprintCostIncrease);
 	bool ServerIncreaseSprintCost_Validate(float serverSprintCostIncrease);
 	void ServerIncreaseSprintCost_Implementation(float serverSprintCostIncrease);

@@ -148,7 +148,7 @@ protected:
 	void ServerIncreaseStaminaRegen_Implementation(float serverStaminaRegenIncrease);
 
 	UFUNCTION(Server, Reliable, WithValidation)
-		void ServerDecreaseStaminaRegen(float serverStaminaRegenDecrease);
+	void ServerDecreaseStaminaRegen(float serverStaminaRegenDecrease);
 	bool ServerDecreaseStaminaRegen_Validate(float serverStaminaRegenDecrease);
 	void ServerDecreaseStaminaRegen_Implementation(float serverStaminaRegenDecrease);
 
@@ -182,6 +182,11 @@ protected:
 	void ServerDecreaseManaRegen(float serverManaRegenDecrease);
 	bool ServerDecreaseManaRegen_Validate(float serverManaRegenDecrease);
 	void ServerDecreaseManaRegen_Implementation(float serverManaRegenDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerControlSprintingTimer(bool IsSprinting);
+	bool ServerControlSprintingTimer_Validate(bool IsSprinting);
+	void ServerControlSprintingTimer_Implementation(bool IsSprinting);
 
 public:	
 
