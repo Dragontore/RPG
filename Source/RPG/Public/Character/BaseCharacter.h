@@ -47,6 +47,7 @@ protected:
 
 	//Sprint Varibles
 	//TODO possible add uproperty. 
+	UPROPERTY(Replicated)
 	bool bIsSprinting;
 	float SprintCost;
 

@@ -258,7 +258,7 @@ void UBaseStatsComponent::IncreaseStaminaRegenRate(float staminaRegenIncrease)
 {
 	if (GetOwnerRole() < ROLE_Authority)
 	{
-
+		ServerIncreaseStaminaRegen(staminaRegenIncrease);
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -282,7 +282,7 @@ void UBaseStatsComponent::DecreaseStaminaRegenRate(float staminaRegenDecrease)
 {
 	if (GetOwnerRole() < ROLE_Authority)
 	{
-
+		ServerDecreaseStaminaRegen(staminaRegenDecrease);
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -294,6 +294,8 @@ void UBaseStatsComponent::ControlSprintingTimer(bool IsSprinting)
 {
 	if (GetOwnerRole() < ROLE_Authority)
 	{
+		ServerControlSprintingTimer(IsSprinting);
+		return;
 	}
 	else if(GetOwnerRole() == ROLE_Authority)
 	{

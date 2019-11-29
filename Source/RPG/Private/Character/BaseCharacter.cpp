@@ -12,6 +12,7 @@
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "TimerManager.h"
+#include "Net/UnrealNetwork.h"
 
 #include "Components/BaseStatsComponent.h"
 
@@ -64,6 +65,15 @@ void ABaseCharacter::BeginPlay()
 	
 }
 
+void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to every client, no special condition required
+	//Replicated Varibles
+	DOREPLIFETIME(ABaseCharacter, bIsSprinting);
+}
+
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
@@ -111,7 +121,7 @@ void ABaseCharacter::LookUpAtRate(float Rate)
 void ABaseCharacter::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
-	{
+		{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -121,7 +131,7 @@ void ABaseCharacter::MoveForward(float Value)
 		if (!bIsSprinting)
 			Value *= 0.5f;
 			AddMovementInput(Direction, Value);
-		
+
 	}
 }
 
@@ -138,7 +148,8 @@ void ABaseCharacter::MoveRight(float Value)
 		// add movement in that direction
 		if (!bIsSprinting)
 			Value *= 0.5f;
-		AddMovementInput(Direction, Value);
+			AddMovementInput(Direction, Value);
+
 	}
 }
 
@@ -174,16 +185,22 @@ void ABaseCharacter::StopSprinting()
 	{
 		bIsSprinting = false;
 		BaseStatsComp->ControlSprintingTimer(false);
-
 	}
 
 }
 
 void ABaseCharacter::HandleSprinting()
 {
-	if (bIsSprinting)
+	if (Role < ROLE_Authority)
 	{
-		BaseStatsComp->DecreaseCurrentStamina(SprintCost);
+		ServerHandleSprinting();
+	}
+	else if (Role == ROLE_Authority)
+	{
+		if (bIsSprinting)
+		{
+			BaseStatsComp->DecreaseCurrentStamina(SprintCost);
+		}
 	}
 }
 
