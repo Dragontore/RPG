@@ -54,6 +54,9 @@ ABaseCharacter::ABaseCharacter()
 	bIsSprinting = false;
 	SprintCost = 5.f;
 	SprintTime = 1.f;
+
+	//Default For Jump
+	JumpCost = 10.f;
 }
 
 // Called when the game starts or when spawned
@@ -88,7 +91,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABaseCharacter::AttempJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ABaseCharacter::StartSprinting);
@@ -163,7 +166,7 @@ void ABaseCharacter::StartSprinting()
 	}
 	else if (Role == ROLE_Authority)
 	{
-		if (CurrentStamina > CurrentSprintCost)
+		if (CurrentStamina > CurrentSprintCost && !GetMovementComponent()->IsFalling())
 		{
 			bIsSprinting = true;
 			BaseStatsComp->ControlSprintingTimer(true);
@@ -187,6 +190,16 @@ void ABaseCharacter::StopSprinting()
 		BaseStatsComp->ControlSprintingTimer(false);
 	}
 
+}
+
+void ABaseCharacter::AttempJump()
+{
+	if (BaseStatsComp->GetCurrentStamina() > JumpCost && !GetMovementComponent()->IsFalling())
+	{
+		Jump();
+		StopSprinting();
+		BaseStatsComp->DecreaseCurrentStamina(JumpCost);
+	}
 }
 
 void ABaseCharacter::HandleSprinting()

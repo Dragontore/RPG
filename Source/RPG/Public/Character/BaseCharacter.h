@@ -40,6 +40,11 @@ public:
 
 	void StopSprinting();
 
+	// Jump Functions
+
+	void AttempJump();
+	float JumpCost;
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")

@@ -16,19 +16,19 @@
 UBaseStatsComponent::UBaseStatsComponent()
 {
 	//Health defaults
-	CurrentHealth = 50.f;
+	CurrentHealth = 100.f;
 	MaxHealth = 100.f;
 	HealthIncreaseRate = 5.f;
 	HealthDecreaseRate = 5.f;
 
 	//Stamina Defaults
-	CurrentStamina = 20.f;
+	CurrentStamina = 100.f;
 	MaxStamina = 100.f;
 	StaminaIncreaseRate = 5.f;
 	StaminaDecreaseRate = 5.f;
 
 	// Mana Defaults
-	CurrentMana = 50.f;
+	CurrentMana = 100.f;
 	MaxMana = 100.f;
 	ManaIncreaseRate = 5.f;
 	ManaDecreaseRate = 5.f;
@@ -230,14 +230,17 @@ void UBaseStatsComponent::DecreaseCurrentStamina(float staminaDecrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		if (CurrentStamina == 0)
+		if (CurrentStamina - staminaDecrease <= 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("You are Exhaushed"))
 			BaseCharacter->StopSprinting();
+			CurrentStamina = 0.0f;
+
 		}
 		else
 		{
 			CurrentStamina -= staminaDecrease;
+			UE_LOG(LogTemp, Warning, TEXT("Current Stamina: %f"), CurrentStamina)
 		}
 	}
 }
