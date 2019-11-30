@@ -64,8 +64,8 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorld()->GetTimerManager().SetTimer(SprintingHandle, this, &ABaseCharacter::HandleSprinting, SprintTime, true);
-	
+
+	ControlSprintingHandle();
 }
 
 void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -170,6 +170,7 @@ void ABaseCharacter::StartSprinting()
 		{
 			bIsSprinting = true;
 			BaseStatsComp->ControlSprintingTimer(true);
+			UE_LOG(LogTemp, Warning, TEXT("Sprint Called"))
 		}
 		else if (CurrentStamina == 0.0f)
 		{
@@ -190,6 +191,18 @@ void ABaseCharacter::StopSprinting()
 		BaseStatsComp->ControlSprintingTimer(false);
 	}
 
+}
+
+void ABaseCharacter::ControlSprintingHandle()
+{
+	if (Role < ROLE_Authority)
+	{
+
+	}
+	else if (Role == ROLE_Authority)
+	{
+		GetWorld()->GetTimerManager().SetTimer(SprintingHandle, this, &ABaseCharacter::HandleSprinting, SprintTime, true);
+	}
 }
 
 void ABaseCharacter::AttempJump()
@@ -270,6 +283,19 @@ void ABaseCharacter::ServerDecreaseSprintCost_Implementation(float serverSprintC
 	{
 
 		DecreaseSprintCost(serverSprintCostDecrease);
+	}
+}
+
+bool ABaseCharacter::ServerControlSprintingHandle_Validate()
+{
+	return true;
+}
+
+void ABaseCharacter::ServerControlSprintingHandle_Implementation()
+{
+	if (Role == ROLE_Authority)
+	{
+		ControlSprintingHandle();
 	}
 }
 

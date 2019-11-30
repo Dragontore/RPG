@@ -309,6 +309,7 @@ void UBaseStatsComponent::ControlSprintingTimer(bool IsSprinting)
 		else
 		{
 			GetWorld()->GetTimerManager().UnPauseTimer(StaminaTimerHandle);
+			UE_LOG(LogTemp, Warning, TEXT("control Sprinting Called"))
 		}
 	}
 }

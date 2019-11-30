@@ -40,6 +40,8 @@ public:
 
 	void StopSprinting();
 
+	void ControlSprintingHandle();
+
 	// Jump Functions
 
 	void AttempJump();
@@ -122,6 +124,11 @@ protected:
 	void ServerDecreaseSprintCost(float serverSprintCostDecrease);
 	bool ServerDecreaseSprintCost_Validate(float serverSprintCostDecrease);
 	void ServerDecreaseSprintCost_Implementation(float serverSprintCostDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerControlSprintingHandle();
+	bool ServerControlSprintingHandle_Validate();
+	void ServerControlSprintingHandle_Implementation();
 
 	/**
 	 * Called via input to turn at a given rate.
