@@ -4,20 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Interactable.generated.h"
+#include "Pickup.generated.h"
 
 UCLASS()
-class RPG_API AInteractable : public AActor
+class RPG_API APickup : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AInteractable();
+	APickup();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+public:	
 
 };

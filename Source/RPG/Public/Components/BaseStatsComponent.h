@@ -83,7 +83,13 @@ protected:
 	UPROPERTY(Replicated)
 	float Endurance;
 
-	
+	UPROPERTY(Replicated)
+	float Agility;
+
+	//TODO Add follow Base Stats
+	//Stealth
+	//Intellgence
+	//Luck
 
 public:	
 	// Sets default values for this component's properties
@@ -234,6 +240,11 @@ protected:
 	bool ServerIncreaseEndurance_Validate(float serverEnduranceIncrease);
 	void ServerIncreaseEndurance_Implementation(float serverEnduranceIncrease);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseAgility(float serverAgilityIncrease);
+	bool ServerIncreaseAgility_Validate(float serverAgilityIncrease);
+	void ServerIncreaseAgility_Implementation(float serverAgilityIncrease);
+
 	// Server Base Stats Decrease Function
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -260,6 +271,11 @@ protected:
 	void ServerDecreaseEndurance(float serverEnduranceDecrease);
 	bool ServerDecreaseEndurance_Validate(float serverEnduranceDecrease);
 	void ServerDecreaseEndurance_Implementation(float serverEnduranceDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseAgility(float serverAgilityDecrease);
+	bool ServerDecreaseAgility_Validate(float serverAgilityDecrease);
+	void ServerDecreaseAgility_Implementation(float serverAgilityDecrease);
 
 public:	
 
@@ -291,6 +307,7 @@ public:
 	void IncreasePerception(float increasePerception);
 	void IncreaseBravery(float increaseBravery);
 	void IncreaseEndurance(float increaseEndurance);
+	void IncreaseAgility(float increaseAgility);
 
 	//Non Server Decrease Base Stat Function
 	void DecreaseStrength(float decreaseStrength);
@@ -298,6 +315,7 @@ public:
 	void DecreasePerception(float decreasePerception);
 	void DecreaseBravery(float decreaseBravery);
 	void DecreaseEndurance(float decreaseEndurance);
+	void DecreaseAgility(float decreaseAgility);
 
 
 	// Health Getter Function
@@ -345,6 +363,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetEndurance();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetAgility();
 
 	//Character Functions
 
