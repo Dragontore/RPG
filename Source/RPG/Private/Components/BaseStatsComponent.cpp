@@ -38,6 +38,13 @@ UBaseStatsComponent::UBaseStatsComponent()
 	ManaRegenRate = 1.f;
 
 	BaseCharacter = Cast<ABaseCharacter>(GetOwner());
+
+	// Base State Starting Defaults
+	Strength = 1.f;
+	Charm = 1.f;
+	Perception = 1.f;
+	Bravery = 1.f;
+	Endurance = 1.f;
 }
 
 
@@ -49,6 +56,8 @@ void UBaseStatsComponent::BeginPlay()
 	SetIsReplicated(true);
 
 	SetTimers();
+
+	//TODO Set Function to set base Stats on game start.
 }
 
 void UBaseStatsComponent::SetTimers()
@@ -77,6 +86,14 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	//Mana Replicated Varibles
 	DOREPLIFETIME(UBaseStatsComponent, CurrentMana);
 	DOREPLIFETIME(UBaseStatsComponent, MaxMana);
+
+	// Base Stats Varibles
+	DOREPLIFETIME(UBaseStatsComponent, Strength);
+	DOREPLIFETIME(UBaseStatsComponent, Charm);
+	DOREPLIFETIME(UBaseStatsComponent, Perception);
+	DOREPLIFETIME(UBaseStatsComponent, Bravery);
+	DOREPLIFETIME(UBaseStatsComponent, Endurance);
+
 }
 
 void UBaseStatsComponent::HandleIncreaseHealthStats()
@@ -405,6 +422,126 @@ void UBaseStatsComponent::DecreaseManaRegenRate(float manaRegenDecrease)
 	}
 }
 
+void UBaseStatsComponent::IncreaseStrength(float increaseStrength)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseStrength(increaseStrength);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Strength += increaseStrength;
+	}
+}
+
+void UBaseStatsComponent::IncreaseCharm(float increaseCharm)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseCharm(increaseCharm);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Charm += increaseCharm;
+	}
+}
+
+void UBaseStatsComponent::IncreasePerception(float increasePerception)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreasePerception(increasePerception);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Perception += increasePerception;
+	}
+}
+
+void UBaseStatsComponent::IncreaseBravery(float increaseBravery)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseBravery(increaseBravery);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Bravery += increaseBravery;
+	}
+}
+
+void UBaseStatsComponent::IncreaseEndurance(float increaseEndurance)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseEndurance(increaseEndurance);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Endurance += increaseEndurance;
+	}
+}
+
+void UBaseStatsComponent::DecreaseStrength(float decreaseStrength)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseStrength(decreaseStrength);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Strength -= decreaseStrength;
+	}
+}
+
+void UBaseStatsComponent::DecreaseCharm(float decreaseCharm)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseCharm(decreaseCharm);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Charm -= decreaseCharm;
+	}
+}
+
+void UBaseStatsComponent::DecreasePerception(float decreasePerception)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreasePerception(decreasePerception);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Perception -= decreasePerception;
+	}
+}
+
+void UBaseStatsComponent::DecreaseBravery(float decreaseBravery)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseBravery(decreaseBravery);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Bravery -= decreaseBravery;
+	}
+}
+
+void UBaseStatsComponent::DecreaseEndurance(float decreaseEndurance)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseEndurance(decreaseEndurance);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Endurance -= decreaseEndurance;
+	}
+}
+
 bool UBaseStatsComponent::ServerIncreaseCurrentHealth_Validate(float serverHealthIncrease)
 {
 	return true;
@@ -654,6 +791,136 @@ void UBaseStatsComponent::ServerControlSprintingTimer_Implementation(bool IsSpri
 	}
 }
 
+bool UBaseStatsComponent::ServerIncreaseStrength_Validate(float serverStrengthIncrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerIncreaseStrength_Implementation(float serverStrengthIncrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseStrength(serverStrengthIncrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerIncreaseCharm_Validate(float serverCharmIncrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerIncreaseCharm_Implementation(float serverCharmIncrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseCharm(serverCharmIncrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerIncreasePerception_Validate(float serverPerceptionIncrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerIncreasePerception_Implementation(float serverPerceptionIncrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreasePerception(serverPerceptionIncrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerIncreaseBravery_Validate(float serverBraveryIncrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerIncreaseBravery_Implementation(float serverBraveryIncrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseBravery(serverBraveryIncrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerIncreaseEndurance_Validate(float serverEnduranceIncrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerIncreaseEndurance_Implementation(float serverEnduranceIncrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseEndurance(serverEnduranceIncrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerDecreaseStrength_Validate(float serverStrengtDecrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerDecreaseStrength_Implementation(float serverStrengthDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseStrength(serverStrengthDecrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerDecreaseCharm_Validate(float serverCharmDecrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerDecreaseCharm_Implementation(float serverCharmDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseCharm(serverCharmDecrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerDecreasePerception_Validate(float serverPerceptionDecrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerDecreasePerception_Implementation(float serverPerceptionDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreasePerception(serverPerceptionDecrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerDecreaseBravery_Validate(float serverBraveryDecrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerDecreaseBravery_Implementation(float serverBraveryDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseBravery(serverBraveryDecrease);
+	}
+}
+
+bool UBaseStatsComponent::ServerDecreaseEndurance_Validate(float serverEnduranceDecrease)
+{
+	return true;
+}
+
+void UBaseStatsComponent::ServerDecreaseEndurance_Implementation(float serverEnduranceDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseEndurance(serverEnduranceDecrease);
+	}
+}
+
 float UBaseStatsComponent::GetCurrentHealth()
 {
 	return CurrentHealth;
@@ -697,5 +964,30 @@ float UBaseStatsComponent::GetMaxMana()
 float UBaseStatsComponent::GetManaRegenRate()
 {
 	return ManaRegenRate;
+}
+
+float UBaseStatsComponent::GetStrength()
+{
+	return Strength;
+}
+
+float UBaseStatsComponent::GetCharm()
+{
+	return Charm;
+}
+
+float UBaseStatsComponent::GetPerception()
+{
+	return Perception;
+}
+
+float UBaseStatsComponent::GetBravery()
+{
+	return Bravery;
+}
+
+float UBaseStatsComponent::GetEndurance()
+{
+	return Endurance;
 }
 

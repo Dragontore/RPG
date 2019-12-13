@@ -66,6 +66,23 @@ protected:
 
 	ABaseCharacter* BaseCharacter;
 
+	//Base Stats
+
+	UPROPERTY(Replicated)
+	float Strength;
+
+	UPROPERTY(Replicated)
+	float Charm;
+
+	UPROPERTY(Replicated)
+	float Perception;
+
+	UPROPERTY(Replicated)
+	float Bravery;
+
+	UPROPERTY(Replicated)
+	float Endurance;
+
 	
 
 public:	
@@ -183,10 +200,66 @@ protected:
 	bool ServerDecreaseManaRegen_Validate(float serverManaRegenDecrease);
 	void ServerDecreaseManaRegen_Implementation(float serverManaRegenDecrease);
 
+	// Server Sprint Function
+
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerControlSprintingTimer(bool IsSprinting);
 	bool ServerControlSprintingTimer_Validate(bool IsSprinting);
 	void ServerControlSprintingTimer_Implementation(bool IsSprinting);
+
+	// Server Base Stats Increase Function
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseStrength(float serverStrenthIncrease);
+	bool ServerIncreaseStrength_Validate(float serverStrengthIncrease);
+	void ServerIncreaseStrength_Implementation(float serverStrengthIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseCharm(float serverCharmIncrease);
+	bool ServerIncreaseCharm_Validate(float serverCharmIncrease);
+	void ServerIncreaseCharm_Implementation(float serverCharmIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreasePerception(float serverPerceptionIncrease);
+	bool ServerIncreasePerception_Validate(float serverPerceptionIncrease);
+	void ServerIncreasePerception_Implementation(float serverPerceptionIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseBravery(float serverBraveryIncrease);
+	bool ServerIncreaseBravery_Validate(float serverBraveryIncrease);
+	void ServerIncreaseBravery_Implementation(float serverBraveryIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseEndurance(float serverEnduranceIncrease);
+	bool ServerIncreaseEndurance_Validate(float serverEnduranceIncrease);
+	void ServerIncreaseEndurance_Implementation(float serverEnduranceIncrease);
+
+	// Server Base Stats Decrease Function
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseStrength(float serverStrenthDecrease);
+	bool ServerDecreaseStrength_Validate(float serverStrengtDecrease);
+	void ServerDecreaseStrength_Implementation(float serverStrengthDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseCharm(float serverCharmDecrease);
+	bool ServerDecreaseCharm_Validate(float serverCharmDecrease);
+	void ServerDecreaseCharm_Implementation(float serverCharmDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreasePerception(float serverPerceptionDecrease);
+	bool ServerDecreasePerception_Validate(float serverPerceptionDecrease);
+	void ServerDecreasePerception_Implementation(float serverPerceptionDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseBravery(float serverBraveryDecrease);
+	bool ServerDecreaseBravery_Validate(float serverBraveryDecrease);
+	void ServerDecreaseBravery_Implementation(float serverBraveryDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseEndurance(float serverEnduranceDecrease);
+	bool ServerDecreaseEndurance_Validate(float serverEnduranceDecrease);
+	void ServerDecreaseEndurance_Implementation(float serverEnduranceDecrease);
 
 public:	
 
@@ -211,6 +284,21 @@ public:
 	void DecreaseCurrentMana(float ManaDecrease);
 	void DecreaseMaxMana(float ManaDecrease);
 	void DecreaseManaRegenRate(float manaRegenDecrease);
+
+	//Non Server Increase Base Stat Function
+	void IncreaseStrength(float increaseStrength);
+	void IncreaseCharm(float increaseCharm);
+	void IncreasePerception(float increasePerception);
+	void IncreaseBravery(float increaseBravery);
+	void IncreaseEndurance(float increaseEndurance);
+
+	//Non Server Decrease Base Stat Function
+	void DecreaseStrength(float decreaseStrength);
+	void DecreaseCharm(float decreaseCharm);
+	void DecreasePerception(float decreasePerception);
+	void DecreaseBravery(float decreaseBravery);
+	void DecreaseEndurance(float decreaseEndurance);
+
 
 	// Health Getter Function
 	UFUNCTION(BlueprintCallable, Category = "Health Getter")
@@ -241,6 +329,22 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Mana Getter")
 	float GetManaRegenRate();
+
+	// Base Stats Getter Functions
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetStrength();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetCharm();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetPerception();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetBravery();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetEndurance();
 
 	//Character Functions
 

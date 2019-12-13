@@ -197,7 +197,7 @@ void ABaseCharacter::ControlSprintingHandle()
 {
 	if (Role < ROLE_Authority)
 	{
-
+		ServerControlSprintingHandle();
 	}
 	else if (Role == ROLE_Authority)
 	{
