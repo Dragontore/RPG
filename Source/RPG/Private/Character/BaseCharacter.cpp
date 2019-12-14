@@ -13,8 +13,10 @@
 #include "Engine/Engine.h"
 #include "TimerManager.h"
 #include "Net/UnrealNetwork.h"
+#include "Components/SkeletalMeshComponent.h"
 
 #include "Components/BaseStatsComponent.h"
+#include "Components/LineTrace.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -49,6 +51,7 @@ ABaseCharacter::ABaseCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	BaseStatsComp = CreateDefaultSubobject<UBaseStatsComponent>(TEXT("Base Stats Component"));
+	LineTraceComp = CreateDefaultSubobject<ULineTrace>(TEXT("Line Trace Component"));
 
 	//Default for Sprinting
 	bIsSprinting = false;
@@ -99,6 +102,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABaseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
+
+	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &ABaseCharacter::Interact);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -228,6 +233,13 @@ void ABaseCharacter::HandleSprinting()
 			BaseStatsComp->DecreaseCurrentStamina(SprintCost);
 		}
 	}
+}
+
+void ABaseCharacter::Interact()
+{
+	FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
+	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * 150.f;
+	AActor* Actor = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
 }
 
 float ABaseCharacter::GetSprintCost()

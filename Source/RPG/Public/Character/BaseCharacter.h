@@ -9,6 +9,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UBaseStatsComponent;
+class ULineTrace;
 
 UCLASS()
 class RPG_API ABaseCharacter : public ACharacter
@@ -52,6 +53,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBaseStatsComponent* BaseStatsComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	ULineTrace* LineTraceComp;
+
 	//Sprint Varibles
 	//TODO possible add uproperty. 
 	UPROPERTY(Replicated)
@@ -76,6 +80,7 @@ protected:
 
 	float SprintTime;
 
+	void Interact();
 
 protected:
 
@@ -129,6 +134,7 @@ protected:
 	void ServerControlSprintingHandle();
 	bool ServerControlSprintingHandle_Validate();
 	void ServerControlSprintingHandle_Implementation();
+
 
 	/**
 	 * Called via input to turn at a given rate.

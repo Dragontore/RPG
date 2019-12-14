@@ -7,6 +7,7 @@
 #include "BaseStatsComponent.generated.h"
 
 class ABaseCharacter;
+class USphereComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPG_API UBaseStatsComponent : public UActorComponent
@@ -48,6 +49,9 @@ protected:
 
 	UPROPERTY(Replicated)
 	float MaxMana;
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Collison")
+	float CollisonRadius;
 
 	float ManaIncreaseRate;
 	float ManaDecreaseRate;
@@ -98,6 +102,10 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	//Collison Sphere Setting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collison")
+	USphereComponent* CollisonSphere;
 
 	void SetTimers();
 
@@ -277,6 +285,17 @@ protected:
 	bool ServerDecreaseAgility_Validate(float serverAgilityDecrease);
 	void ServerDecreaseAgility_Implementation(float serverAgilityDecrease);
 
+	// Collison Radius Server Functions
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseCollisonRadius(float serverIncreaseCollisonRadius);
+	bool ServerIncreaseCollisonRadius_Validate(float serverIncreaseCollisonRadius);
+	void ServerIncreaseCollisonRadius_Implementation(float serverIncreaseCollisonRadius);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseCollisonRadius(float serverDecreaseCollisonRadius);
+	bool ServerDecreaseCollisonRadius_Validate(float serverDecreaseCollisonRadius);
+	void ServerDecreaseCollisonRadius_Implementation(float serverDecreaseCollisonRadius);
+
 public:	
 
 	// Non Server Health Function
@@ -316,6 +335,17 @@ public:
 	void DecreaseBravery(float decreaseBravery);
 	void DecreaseEndurance(float decreaseEndurance);
 	void DecreaseAgility(float decreaseAgility);
+
+	// Non Server Collison Functions
+
+	UFUNCTION(BlueprintCallable, Category = "Collison")
+	float GetCollisonRadius();
+
+	UFUNCTION(BlueprintCallable, Category = "Collison")
+	void IncreaseCollisonRadius(float IncreaseCollisonRadius);
+
+	UFUNCTION(BlueprintCallable, Category = "Collison")
+	void DecreaseCollisonRadius(float decreaseCollisonRadius);
 
 
 	// Health Getter Function

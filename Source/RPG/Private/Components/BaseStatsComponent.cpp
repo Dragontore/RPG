@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "TimerManager.h"
+#include "Components/SphereComponent.h"
 
 #include "Character/BaseCharacter.h"
 
@@ -15,6 +16,14 @@
 // Sets default values for this component's properties
 UBaseStatsComponent::UBaseStatsComponent()
 {
+
+	// Collison Sphere Radius
+	CollisonRadius = 150.f;
+
+	// Collison Sphere
+	CollisonSphere = CreateDefaultSubobject<USphereComponent>("Collison Sphere");
+	CollisonSphere->SetSphereRadius(CollisonRadius);
+
 	//Health defaults
 	CurrentHealth = 100.f;
 	MaxHealth = 100.f;
@@ -95,6 +104,9 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(UBaseStatsComponent, Bravery);
 	DOREPLIFETIME(UBaseStatsComponent, Endurance);
 	DOREPLIFETIME(UBaseStatsComponent, Agility);
+
+	// Collison Varibles
+	DOREPLIFETIME(UBaseStatsComponent, CollisonRadius);
 
 }
 
@@ -568,6 +580,35 @@ void UBaseStatsComponent::DecreaseAgility(float decreaseAgility)
 	}
 }
 
+float UBaseStatsComponent::GetCollisonRadius()
+{
+	return CollisonRadius;
+}
+
+void UBaseStatsComponent::IncreaseCollisonRadius(float IncreaseCollisonRadius)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseCollisonRadius(IncreaseCollisonRadius);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		CollisonRadius += IncreaseCollisonRadius;
+	}
+}
+
+void UBaseStatsComponent::DecreaseCollisonRadius(float decreaseCollisonRadius)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseCollisonRadius(decreaseCollisonRadius);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		CollisonRadius -= decreaseCollisonRadius;
+	}
+}
+
 bool UBaseStatsComponent::ServerIncreaseCurrentHealth_Validate(float serverHealthIncrease)
 {
 	return true;
@@ -719,6 +760,16 @@ bool UBaseStatsComponent::ServerDecreaseBravery_Validate(float serverBraveryDecr
 }
 
 bool UBaseStatsComponent::ServerDecreaseAgility_Validate(float serverAgilityDecrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerIncreaseCollisonRadius_Validate(float serverIncreaseCollisonRadius)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerDecreaseCollisonRadius_Validate(float serverDecreaseCollisonRadius)
 {
 	return true;
 }
@@ -968,6 +1019,22 @@ void UBaseStatsComponent::ServerDecreaseAgility_Implementation(float serverAgili
 	if (GetOwnerRole() == ROLE_Authority)
 	{
 		DecreaseAgility(serverAgilityDecrease);
+	}
+}
+
+void UBaseStatsComponent::ServerIncreaseCollisonRadius_Implementation(float serverIncreaseCollisonRadius)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseCollisonRadius(serverIncreaseCollisonRadius);
+	}
+}
+
+void UBaseStatsComponent::ServerDecreaseCollisonRadius_Implementation(float serverDecreaseCollisonRadius)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseCollisonRadius(serverDecreaseCollisonRadius);
 	}
 }
 

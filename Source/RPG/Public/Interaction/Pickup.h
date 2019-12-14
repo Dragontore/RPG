@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "Pickup.generated.h"
 
+class UStaticMeshComponent;
+class USphereComponent;
+
 UCLASS()
 class RPG_API APickup : public AActor
 {
@@ -14,6 +17,14 @@ class RPG_API APickup : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APickup();
+
+protected: 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
+	UStaticMeshComponent* MeshComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
+	USphereComponent* CollisonSphere;
 
 protected:
 	// Called when the game starts or when spawned
