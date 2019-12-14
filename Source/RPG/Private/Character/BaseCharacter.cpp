@@ -17,6 +17,8 @@
 
 #include "Components/BaseStatsComponent.h"
 #include "Components/LineTrace.h"
+#include "Interaction/Pickup.h"
+#include "Interaction/Interactable.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -241,8 +243,45 @@ void ABaseCharacter::HandleSprinting()
 void ABaseCharacter::Interact()
 {
 	FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
-	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LinetraceLength;
+	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LineTraceLength;
 	AActor* Actor = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
+	if (Actor)
+	{
+		if (APickup* Pickup = Cast<APickup>(Actor))
+		{
+			ServerInteract();
+		}
+		else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
+		{
+			ServerInteract();
+		}
+	}
+}
+
+bool ABaseCharacter::ServerInteract_Validate()
+{
+	return true;
+}
+
+void ABaseCharacter::ServerInteract_Implementation()
+{
+	if (Role == ROLE_Authority)
+	{
+		FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
+		FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LineTraceLength;
+		AActor* Actor = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
+		if (Actor)
+		{
+			if (APickup* Pickup = Cast<APickup>(Actor))
+			{
+				Pickup->UseItem(this);
+			}
+			else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
+			{
+				Interactable->Interact(this);
+			}
+		}
+	}
 }
 
 float ABaseCharacter::GetSprintCost()

@@ -91,9 +91,11 @@ protected:
 	float Agility;
 
 	//TODO Add follow Base Stats
+	// Money
 	//Stealth
 	//Intellgence
 	//Luck
+	//Unarmed Combat
 
 public:	
 	// Sets default values for this component's properties

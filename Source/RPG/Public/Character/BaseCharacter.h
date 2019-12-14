@@ -48,10 +48,10 @@ public:
 	void AttempJump();
 	float JumpCost;
 
-protected:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBaseStatsComponent* BaseStatsComp;
+
+protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	ULineTrace* LineTraceComp;
@@ -79,7 +79,7 @@ protected:
 
 	//Interact functions
 	void Interact();
-	UPROPerty(EditAnywhere, BlueprintReadWrite, Category = "Interact")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interact")
 	float LineTraceLength;
 
 protected:
@@ -135,6 +135,11 @@ protected:
 	bool ServerControlSprintingHandle_Validate();
 	void ServerControlSprintingHandle_Implementation();
 
+	//Server Interact Function
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerInteract();
+	bool ServerInteract_Validate();
+	void ServerInteract_Implementation();
 
 	/**
 	 * Called via input to turn at a given rate.

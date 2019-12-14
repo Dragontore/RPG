@@ -8,6 +8,7 @@
 
 class UStaticMeshComponent;
 class USphereComponent;
+class ABaseCharacter;
 
 UCLASS()
 class RPG_API AInteractable : public AActor
@@ -17,6 +18,12 @@ class RPG_API AInteractable : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AInteractable();
+
+public:
+
+	//Blueprint function for inteaction use of timeline etc
+	UFUNCTION(BlueprintImplementableEvent)
+	void Interact(ABaseCharacter* Player);
 
 protected:
 
@@ -32,4 +39,6 @@ protected:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+
 };
