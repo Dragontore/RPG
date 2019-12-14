@@ -60,6 +60,9 @@ ABaseCharacter::ABaseCharacter()
 
 	//Default For Jump
 	JumpCost = 10.f;
+
+	//Default for Interact
+	LineTraceLength = 150.f;
 }
 
 // Called when the game starts or when spawned
@@ -238,7 +241,7 @@ void ABaseCharacter::HandleSprinting()
 void ABaseCharacter::Interact()
 {
 	FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
-	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * 150.f;
+	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LinetraceLength;
 	AActor* Actor = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
 }
 

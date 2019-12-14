@@ -61,6 +61,9 @@ protected:
 	UPROPERTY(Replicated)
 	bool bIsSprinting;
 	float SprintCost;
+	FTimerHandle SprintingHandle;
+	void HandleSprinting();
+	float SprintTime;
 
 	//Function to display Health Bar
 	UFUNCTION(Blueprintpure, Category = "Stats")
@@ -74,13 +77,10 @@ protected:
 	UFUNCTION(Blueprintpure, Category = "Stats")
 	float ReturnPlayerMana();
 
-	FTimerHandle SprintingHandle;
-
-	void HandleSprinting();
-
-	float SprintTime;
-
+	//Interact functions
 	void Interact();
+	UPROPerty(EditAnywhere, BlueprintReadWrite, Category = "Interact")
+	float LineTraceLength;
 
 protected:
 
