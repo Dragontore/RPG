@@ -108,6 +108,11 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	// Collison Varibles
 	DOREPLIFETIME(UBaseStatsComponent, CollisonRadius);
 
+	// Coin Varibles
+	DOREPLIFETIME(UBaseStatsComponent, BronzeCoin);
+	DOREPLIFETIME(UBaseStatsComponent, SilverCoin);
+	DOREPLIFETIME(UBaseStatsComponent, GoldCoin);
+
 }
 
 void UBaseStatsComponent::HandleIncreaseHealthStats()
@@ -609,6 +614,30 @@ void UBaseStatsComponent::DecreaseCollisonRadius(float decreaseCollisonRadius)
 	}
 }
 
+void UBaseStatsComponent::IncreaseBronzeCoins(float increaseBronzeCoin)
+{
+}
+
+void UBaseStatsComponent::IncreaseSilverCoins(float increaseSilverCoin)
+{
+}
+
+void UBaseStatsComponent::IncreaseGoldCoins(float increaseGoldCoin)
+{
+}
+
+void UBaseStatsComponent::DecreaseBronzeCoins(float DecreaseBronzeCoin)
+{
+}
+
+void UBaseStatsComponent::DecreaseSilverCoins(float DecreaseSilverCoin)
+{
+}
+
+void UBaseStatsComponent::DecreaseGoldCoins(float DecreaseGoldCoin)
+{
+}
+
 bool UBaseStatsComponent::ServerIncreaseCurrentHealth_Validate(float serverHealthIncrease)
 {
 	return true;
@@ -926,6 +955,60 @@ void UBaseStatsComponent::ServerControlSprintingTimer_Implementation(bool IsSpri
 	}
 }
 
+bool UBaseStatsComponent::ServerIncreaseBronzeCoins_Validate(float serverBronzeCoinIncrease)
+{
+	return false;
+}
+
+void UBaseStatsComponent::ServerIncreaseBronzeCoins_Implementation(float serverBronzeCoinIncrease)
+{
+}
+
+bool UBaseStatsComponent::ServerDecreaseBronzeCoins_Validate(float serverBronzeCoinDecrease)
+{
+	return false;
+}
+
+void UBaseStatsComponent::ServerDecreaseBronzeCoins_Implementation(float serverBronzeCoinDecrease)
+{
+}
+
+bool UBaseStatsComponent::ServerIncreaseSilverCoins_Validate(float serverSilverCoinIncrease)
+{
+	return false;
+}
+
+void UBaseStatsComponent::ServerIncreaseSilverCoins_Implementation(float serverSilverCoinIncrease)
+{
+}
+
+bool UBaseStatsComponent::ServerDecreaseSilverCoins_Validate(float serverSilverCoinDecrease)
+{
+	return false;
+}
+
+void UBaseStatsComponent::ServerDecreaseSilverCoins_Implementation(float serverSilverCoinDecrease)
+{
+}
+
+bool UBaseStatsComponent::ServerIncreaseGoldCoins_Validate(float serverGoldCoinIncrease)
+{
+	return false;
+}
+
+void UBaseStatsComponent::ServerIncreaseGoldCoins_Implementation(float serverGoldCoinIncrease)
+{
+}
+
+bool UBaseStatsComponent::ServerDecreaseGoldCoins_Validate(float serverGoldCoinDecrease)
+{
+	return false;
+}
+
+void UBaseStatsComponent::ServerDecreaseGoldCoins_Implementation(float serverGoldCoinDecrease)
+{
+}
+
 void UBaseStatsComponent::ServerIncreaseStrength_Implementation(float serverStrengthIncrease)
 {
 	if (GetOwnerRole() == ROLE_Authority)
@@ -1111,5 +1194,20 @@ float UBaseStatsComponent::GetEndurance()
 float UBaseStatsComponent::GetAgility()
 {
 	return Agility;
+}
+
+float UBaseStatsComponent::GetBronzeCoins()
+{
+	return 0.0f;
+}
+
+float UBaseStatsComponent::GetSilverCoins()
+{
+	return 0.0f;
+}
+
+float UBaseStatsComponent::GetGoldCoins()
+{
+	return 0.0f;
 }
 

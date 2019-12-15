@@ -13,12 +13,15 @@ AInteractable::AInteractable()
 
 	bReplicates = true;
 
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	RootComponent = MeshComp;
+	InteractionMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("Interaction Mesh");
+	RootComponent = InteractionMeshComp;
 
 	CollisonSphere = CreateDefaultSubobject<USphereComponent>("Collision Sphere");
-	CollisonSphere->SetupAttachment(MeshComp);
+	CollisonSphere->SetupAttachment(InteractionMeshComp);
 	CollisonSphere->InitSphereRadius(CollisonRadius);
+
+	HoldingMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("Interaction Mesh Holder");
+	HoldingMeshComp->SetupAttachment(InteractionMeshComp);
 
 	//Default Values
 	CollisonRadius = 500.f;

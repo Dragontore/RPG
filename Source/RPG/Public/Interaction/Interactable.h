@@ -28,7 +28,10 @@ public:
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
-	UStaticMeshComponent* MeshComp;
+	UStaticMeshComponent* InteractionMeshComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
+	UStaticMeshComponent* HoldingMeshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
 	USphereComponent* CollisonSphere;

@@ -90,8 +90,16 @@ protected:
 	UPROPERTY(Replicated)
 	float Agility;
 
+	UPROPERTY(Replicated)
+	int BronzeCoin;
+
+	UPROPERTY(Replicated)
+	int SilverCoin;
+
+	UPROPERTY(Replicated)
+	int GoldCoin;
+
 	//TODO Add follow Base Stats
-	// Money
 	//Stealth
 	//Intellgence
 	//Luck
@@ -223,6 +231,38 @@ protected:
 	bool ServerControlSprintingTimer_Validate(bool IsSprinting);
 	void ServerControlSprintingTimer_Implementation(bool IsSprinting);
 
+	//Server Coin Functions
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseBronzeCoins(float serverBronzeCoinIncrease);
+	bool ServerIncreaseBronzeCoins_Validate(float serverBronzeCoinIncrease);
+	void ServerIncreaseBronzeCoins_Implementation(float serverBronzeCoinIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseBronzeCoins(float serverBronzeCoinDecrease);
+	bool ServerDecreaseBronzeCoins_Validate(float serverBronzeCoinDecrease);
+	void ServerDecreaseBronzeCoins_Implementation(float serverBronzeCoinDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseSilverCoins(float serverSilverCoinIncrease);
+	bool ServerIncreaseSilverCoins_Validate(float serverSilverCoinIncrease);
+	void ServerIncreaseSilverCoins_Implementation(float serverSilverCoinIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseSilverCoins(float serverSilverCoinDecrease);
+	bool ServerDecreaseSilverCoins_Validate(float serverSilverCoinDecrease);
+	void ServerDecreaseSilverCoins_Implementation(float serverSilverCoinDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseGoldCoins(float serverGoldCoinIncrease);
+	bool ServerIncreaseGoldCoins_Validate(float serverGoldCoinIncrease);
+	void ServerIncreaseGoldCoins_Implementation(float serverGoldCoinIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseGoldCoins(float serverGoldCoinDecrease);
+	bool ServerDecreaseGoldCoins_Validate(float serverGoldCoinDecrease);
+	void ServerDecreaseGoldCoins_Implementation(float serverGoldCoinDecrease);
+
 	// Server Base Stats Increase Function
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -321,7 +361,6 @@ public:
 	void DecreaseCurrentMana(float ManaDecrease);
 	void DecreaseMaxMana(float ManaDecrease);
 	void DecreaseManaRegenRate(float manaRegenDecrease);
-
 	//Non Server Increase Base Stat Function
 	void IncreaseStrength(float increaseStrength);
 	void IncreaseCharm(float increaseCharm);
@@ -329,7 +368,6 @@ public:
 	void IncreaseBravery(float increaseBravery);
 	void IncreaseEndurance(float increaseEndurance);
 	void IncreaseAgility(float increaseAgility);
-
 	//Non Server Decrease Base Stat Function
 	void DecreaseStrength(float decreaseStrength);
 	void DecreaseCharm(float decreaseCharm);
@@ -337,18 +375,20 @@ public:
 	void DecreaseBravery(float decreaseBravery);
 	void DecreaseEndurance(float decreaseEndurance);
 	void DecreaseAgility(float decreaseAgility);
-
 	// Non Server Collison Functions
-
 	UFUNCTION(BlueprintCallable, Category = "Collison")
 	float GetCollisonRadius();
-
 	UFUNCTION(BlueprintCallable, Category = "Collison")
 	void IncreaseCollisonRadius(float IncreaseCollisonRadius);
-
 	UFUNCTION(BlueprintCallable, Category = "Collison")
 	void DecreaseCollisonRadius(float decreaseCollisonRadius);
-
+	//Non Server Coin Function
+	void IncreaseBronzeCoins(float increaseBronzeCoin);
+	void IncreaseSilverCoins(float increaseSilverCoin);
+	void IncreaseGoldCoins(float increaseGoldCoin);
+	void DecreaseBronzeCoins(float DecreaseBronzeCoin);
+	void DecreaseSilverCoins(float DecreaseSilverCoin);
+	void DecreaseGoldCoins(float DecreaseGoldCoin);
 
 	// Health Getter Function
 	UFUNCTION(BlueprintCallable, Category = "Health Getter")
@@ -398,6 +438,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetAgility();
+
+	//Coin Getter Function
+	UFUNCTION(BlueprintCallable, Category = "Coin Getter")
+	float GetBronzeCoins();
+
+	UFUNCTION(BlueprintCallable, Category = "Coin Getter")
+	float GetSilverCoins();
+
+	UFUNCTION(BlueprintCallable, Category = "Coin Getter")
+	float GetGoldCoins();
 
 	//Character Functions
 
