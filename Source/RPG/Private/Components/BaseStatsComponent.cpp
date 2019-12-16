@@ -55,6 +55,15 @@ UBaseStatsComponent::UBaseStatsComponent()
 	Bravery = 1.f;
 	Endurance = 1.f;
 	Agility = 1.f;
+	Stealth = 1.f;
+	Intelligence = 1.f;
+	Luck = 1.f;
+	UnarmedCombat = 1.f;
+
+	//Coin Defaults
+	BronzeCoin = 10;
+	SilverCoin = 0;
+	GoldCoin = 0;
 }
 
 
@@ -104,6 +113,10 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME(UBaseStatsComponent, Bravery);
 	DOREPLIFETIME(UBaseStatsComponent, Endurance);
 	DOREPLIFETIME(UBaseStatsComponent, Agility);
+	DOREPLIFETIME(UBaseStatsComponent, Stealth);
+	DOREPLIFETIME(UBaseStatsComponent, Intelligence);
+	DOREPLIFETIME(UBaseStatsComponent, Luck);
+	DOREPLIFETIME(UBaseStatsComponent, UnarmedCombat);
 
 	// Collison Varibles
 	DOREPLIFETIME(UBaseStatsComponent, CollisonRadius);
@@ -242,8 +255,6 @@ void UBaseStatsComponent::IncreaseCurrentStamina(float staminaIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-
-
 			if (CurrentStamina >= MaxStamina)
 			{
 				CurrentStamina = MaxStamina;
@@ -253,7 +264,6 @@ void UBaseStatsComponent::IncreaseCurrentStamina(float staminaIncrease)
 				CurrentStamina += staminaIncrease;
 				UE_LOG(LogTemp, Warning, TEXT("Current Stamina: %f"), CurrentStamina);
 			}
-
 	}
 }
 
@@ -262,7 +272,6 @@ void UBaseStatsComponent::DecreaseCurrentStamina(float staminaDecrease)
 	if (GetOwnerRole() < ROLE_Authority)
 	{
 		ServerDecreaseCurrentStamina(staminaDecrease);
-
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -271,7 +280,6 @@ void UBaseStatsComponent::DecreaseCurrentStamina(float staminaDecrease)
 			UE_LOG(LogTemp, Warning, TEXT("You are Exhaushed"))
 			BaseCharacter->StopSprinting();
 			CurrentStamina = 0.0f;
-
 		}
 		else
 		{
@@ -345,7 +353,6 @@ void UBaseStatsComponent::ControlSprintingTimer(bool IsSprinting)
 		else
 		{
 			GetWorld()->GetTimerManager().UnPauseTimer(StaminaTimerHandle);
-			UE_LOG(LogTemp, Warning, TEXT("control Sprinting Called"))
 		}
 	}
 }
@@ -359,8 +366,6 @@ void UBaseStatsComponent::IncreaseCurrentMana(float manaIncrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-
-
 		if (CurrentMana >= MaxMana)
 		{
 			CurrentMana = MaxMana;
@@ -380,8 +385,6 @@ void UBaseStatsComponent::DecreaseCurrentMana(float manaDecrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-
-
 		if (CurrentMana == 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("No Mana"));
@@ -513,6 +516,54 @@ void UBaseStatsComponent::IncreaseAgility(float increaseAgility)
 	}
 }
 
+void UBaseStatsComponent::IncreaseStealth(float increaseStealth)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseStealth(increaseStealth);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Stealth += increaseStealth;
+	}
+}
+
+void UBaseStatsComponent::IncreaseIntelligence(float increaseIntelligence)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseIntelligence(increaseIntelligence);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Intelligence += increaseIntelligence;
+	}
+}
+
+void UBaseStatsComponent::IncreaseLuck(float increaseLuck)
+{
+	if(GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseLuck(increaseLuck);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Luck += increaseLuck;
+	}
+}
+
+void UBaseStatsComponent::IncreaseUnarmedCombat(float increaseUnarmedCombat)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseUnarmedCombat(increaseUnarmedCombat);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		UnarmedCombat += increaseUnarmedCombat;
+	}
+}
+
 void UBaseStatsComponent::DecreaseStrength(float decreaseStrength)
 {
 	if (GetOwnerRole() < ROLE_Authority)
@@ -585,9 +636,52 @@ void UBaseStatsComponent::DecreaseAgility(float decreaseAgility)
 	}
 }
 
-float UBaseStatsComponent::GetCollisonRadius()
+void UBaseStatsComponent::DecreaseStealth(float decreaseStealth)
 {
-	return CollisonRadius;
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseStealth(decreaseStealth);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Stealth -= decreaseStealth;
+	}
+}
+
+void UBaseStatsComponent::DecreaseIntelligence(float decreaseIntelligence)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseIntelligence(decreaseIntelligence);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Intelligence -= decreaseIntelligence;
+	}
+}
+
+void UBaseStatsComponent::DecreaseLuck(float decreaseLuck)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseLuck(decreaseLuck);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		Luck -= decreaseLuck;
+	}
+}
+
+void UBaseStatsComponent::DecreaseUnarmedCombat(float decreaseUnarmedCombat)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseUnarmedCombat(decreaseUnarmedCombat);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		UnarmedCombat -= decreaseUnarmedCombat;
+	}
 }
 
 void UBaseStatsComponent::IncreaseCollisonRadius(float IncreaseCollisonRadius)
@@ -616,26 +710,111 @@ void UBaseStatsComponent::DecreaseCollisonRadius(float decreaseCollisonRadius)
 
 void UBaseStatsComponent::IncreaseBronzeCoins(float increaseBronzeCoin)
 {
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseBronzeCoins(increaseBronzeCoin);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		BronzeCoin += increaseBronzeCoin;
+		if (GetBronzeCoins() > 100)
+		{
+			BronzeCoin -= 100;
+			SilverCoin += 1;
+		}
+	}
 }
 
 void UBaseStatsComponent::IncreaseSilverCoins(float increaseSilverCoin)
 {
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseSilverCoins(increaseSilverCoin);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		SilverCoin += increaseSilverCoin;
+		if (GetSilverCoins() > 100)
+		{
+			SilverCoin -= 100;
+			GoldCoin += 1;
+		}
+	}
 }
 
 void UBaseStatsComponent::IncreaseGoldCoins(float increaseGoldCoin)
 {
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseGoldCoins(increaseGoldCoin);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		GoldCoin += increaseGoldCoin;
+	}
 }
 
-void UBaseStatsComponent::DecreaseBronzeCoins(float DecreaseBronzeCoin)
+void UBaseStatsComponent::DecreaseBronzeCoins(float decreaseBronzeCoin)
 {
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseBronzeCoins(decreaseBronzeCoin);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		if(BronzeCoin -= decreaseBronzeCoin < 0 && GetSilverCoins() > 1)
+		{
+			SilverCoin -= 1;
+			BronzeCoin += 100;
+		}
+		else if (BronzeCoin -= decreaseBronzeCoin < 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not Enought Money"))
+			return;
+		}
+		BronzeCoin -= decreaseBronzeCoin;
+	}
 }
 
-void UBaseStatsComponent::DecreaseSilverCoins(float DecreaseSilverCoin)
+void UBaseStatsComponent::DecreaseSilverCoins(float decreaseSilverCoin)
 {
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseSilverCoins(decreaseSilverCoin);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+
+		if (SilverCoin -= decreaseSilverCoin < 0 && GetGoldCoins() > 1)
+		{
+			GoldCoin -= 1;
+			SilverCoin += 100;
+		}
+		else if (SilverCoin -= decreaseSilverCoin < 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not Enought Money"))
+			return;
+		}
+		
+		SilverCoin -= decreaseSilverCoin;
+	}
 }
 
-void UBaseStatsComponent::DecreaseGoldCoins(float DecreaseGoldCoin)
+void UBaseStatsComponent::DecreaseGoldCoins(float decreaseGoldCoin)
 {
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseGoldCoins(decreaseGoldCoin);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		if (GoldCoin -= decreaseGoldCoin < 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not Enought Money"))
+			return;
+		}
+		GoldCoin -= decreaseGoldCoin;
+	}
 }
 
 bool UBaseStatsComponent::ServerIncreaseCurrentHealth_Validate(float serverHealthIncrease)
@@ -803,6 +982,76 @@ bool UBaseStatsComponent::ServerDecreaseCollisonRadius_Validate(float serverDecr
 	return true;
 }
 
+bool UBaseStatsComponent::ServerIncreaseBronzeCoins_Validate(float serverBronzeCoinIncrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerDecreaseBronzeCoins_Validate(float serverBronzeCoinDecrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerIncreaseSilverCoins_Validate(float serverSilverCoinIncrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerDecreaseSilverCoins_Validate(float serverSilverCoinDecrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerIncreaseGoldCoins_Validate(float serverGoldCoinIncrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerDecreaseGoldCoins_Validate(float serverGoldCoinDecrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerIncreaseStealth_Validate(float serverStealthIncrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerDecreaseStealth_Validate(float serverStealthDecrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerIncreaseIntelligence_Validate(float serverIntelligenceIncrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerDecreaseIntelligence_Validate(float serverIntelligenceDecrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerIncreaseUnarmedCombat_Validate(float serverUnarmedCombatIncrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerDecreaseUnarmedCombat_Validate(float serverUnarmedCombatDecrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerIncreaseLuck_Validate(float serverLuckIncrease)
+{
+	return true;
+}
+
+bool UBaseStatsComponent::ServerDecreaseLuck_Validate(float serverLuckDecrease)
+{
+	return true;
+}
+
 void UBaseStatsComponent::ServerIncreaseCurrentHealth_Implementation(float serverHealthIncrease)
 {
 	if (GetOwnerRole() == ROLE_Authority)
@@ -955,58 +1204,52 @@ void UBaseStatsComponent::ServerControlSprintingTimer_Implementation(bool IsSpri
 	}
 }
 
-bool UBaseStatsComponent::ServerIncreaseBronzeCoins_Validate(float serverBronzeCoinIncrease)
-{
-	return false;
-}
-
 void UBaseStatsComponent::ServerIncreaseBronzeCoins_Implementation(float serverBronzeCoinIncrease)
 {
-}
-
-bool UBaseStatsComponent::ServerDecreaseBronzeCoins_Validate(float serverBronzeCoinDecrease)
-{
-	return false;
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseBronzeCoins(serverBronzeCoinIncrease);
+	}
 }
 
 void UBaseStatsComponent::ServerDecreaseBronzeCoins_Implementation(float serverBronzeCoinDecrease)
 {
-}
-
-bool UBaseStatsComponent::ServerIncreaseSilverCoins_Validate(float serverSilverCoinIncrease)
-{
-	return false;
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseBronzeCoins(serverBronzeCoinDecrease);
+	}
 }
 
 void UBaseStatsComponent::ServerIncreaseSilverCoins_Implementation(float serverSilverCoinIncrease)
 {
-}
-
-bool UBaseStatsComponent::ServerDecreaseSilverCoins_Validate(float serverSilverCoinDecrease)
-{
-	return false;
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseSilverCoins(serverSilverCoinIncrease);
+	}
 }
 
 void UBaseStatsComponent::ServerDecreaseSilverCoins_Implementation(float serverSilverCoinDecrease)
 {
-}
-
-bool UBaseStatsComponent::ServerIncreaseGoldCoins_Validate(float serverGoldCoinIncrease)
-{
-	return false;
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseSilverCoins(serverSilverCoinDecrease);
+	}
 }
 
 void UBaseStatsComponent::ServerIncreaseGoldCoins_Implementation(float serverGoldCoinIncrease)
 {
-}
-
-bool UBaseStatsComponent::ServerDecreaseGoldCoins_Validate(float serverGoldCoinDecrease)
-{
-	return false;
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseGoldCoins(serverGoldCoinIncrease);
+	}
 }
 
 void UBaseStatsComponent::ServerDecreaseGoldCoins_Implementation(float serverGoldCoinDecrease)
 {
+	if (GetOwnerRole() == ROLE_Authority) 
+	{
+		DecreaseGoldCoins(serverGoldCoinDecrease);
+	}
 }
 
 void UBaseStatsComponent::ServerIncreaseStrength_Implementation(float serverStrengthIncrease)
@@ -1049,11 +1292,43 @@ void UBaseStatsComponent::ServerIncreaseEndurance_Implementation(float serverEnd
 	}
 }
 
+void UBaseStatsComponent::ServerIncreaseIntelligence_Implementation(float serverIntelligenceIncrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseIntelligence(serverIntelligenceIncrease);
+	}
+}
+
+void UBaseStatsComponent::ServerIncreaseUnarmedCombat_Implementation(float serverUnarmedCombatIncrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseUnarmedCombat(serverUnarmedCombatIncrease);
+	}
+}
+
 void UBaseStatsComponent::ServerIncreaseAgility_Implementation(float serverAgilityIncrease)
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
 		IncreaseAgility(serverAgilityIncrease);
+	}
+}
+
+void UBaseStatsComponent::ServerIncreaseLuck_Implementation(float serverLuckIncrease)
+{
+	if(GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseLuck(serverLuckIncrease);
+	}
+}
+
+void UBaseStatsComponent::ServerIncreaseStealth_Implementation(float serverStealthIncrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseStealth(serverStealthIncrease);
 	}
 }
 
@@ -1102,6 +1377,38 @@ void UBaseStatsComponent::ServerDecreaseAgility_Implementation(float serverAgili
 	if (GetOwnerRole() == ROLE_Authority)
 	{
 		DecreaseAgility(serverAgilityDecrease);
+	}
+}
+
+void UBaseStatsComponent::ServerDecreaseStealth_Implementation(float serverStealthDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseStealth(serverStealthDecrease);
+	}
+}
+
+void UBaseStatsComponent::ServerDecreaseIntelligence_Implementation(float serverIntelligenceDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseIntelligence(serverIntelligenceDecrease);
+	}
+}
+
+void UBaseStatsComponent::ServerDecreaseLuck_Implementation(float serverLuckDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseLuck(serverLuckDecrease);
+	}
+}
+
+void UBaseStatsComponent::ServerDecreaseUnarmedCombat_Implementation(float serverUnarmedCombatDecrease)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseUnarmedCombat(serverUnarmedCombatDecrease);
 	}
 }
 
@@ -1196,18 +1503,42 @@ float UBaseStatsComponent::GetAgility()
 	return Agility;
 }
 
+float UBaseStatsComponent::GetStealth()
+{
+	return Stealth;
+}
+
+float UBaseStatsComponent::GetIntelligence()
+{
+	return Intelligence;
+}
+
+float UBaseStatsComponent::GetLuck()
+{
+	return Luck;
+}
+
+float UBaseStatsComponent::GetUnarmedCombat()
+{
+	return UnarmedCombat;
+}
+
 float UBaseStatsComponent::GetBronzeCoins()
 {
-	return 0.0f;
+	return BronzeCoin;
 }
 
 float UBaseStatsComponent::GetSilverCoins()
 {
-	return 0.0f;
+	return SilverCoin;
 }
 
 float UBaseStatsComponent::GetGoldCoins()
 {
-	return 0.0f;
+	return GoldCoin;
 }
 
+float UBaseStatsComponent::GetCollisonRadius()
+{
+	return CollisonRadius;
+}

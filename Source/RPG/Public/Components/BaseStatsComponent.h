@@ -91,6 +91,18 @@ protected:
 	float Agility;
 
 	UPROPERTY(Replicated)
+	float Stealth;
+
+	UPROPERTY(Replicated)
+	float Intelligence;
+
+	UPROPERTY(Replicated)
+	float Luck;
+
+	UPROPERTY(Replicated)
+	float UnarmedCombat;
+
+	UPROPERTY(Replicated)
 	int BronzeCoin;
 
 	UPROPERTY(Replicated)
@@ -98,12 +110,6 @@ protected:
 
 	UPROPERTY(Replicated)
 	int GoldCoin;
-
-	//TODO Add follow Base Stats
-	//Stealth
-	//Intellgence
-	//Luck
-	//Unarmed Combat
 
 public:	
 	// Sets default values for this component's properties
@@ -136,27 +142,22 @@ protected:
 	void ServerIncreaseCurrentHealth(float serverCurrentHealthIncrease);
 	bool ServerIncreaseCurrentHealth_Validate(float serverCurrentHealthIncrease);
 	void ServerIncreaseCurrentHealth_Implementation(float serverCurrentHealthIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseCurrentHealth(float serverCurrentHealthDecrease);
 	bool ServerDecreaseCurrentHealth_Validate(float serverCurrentHealthDecrease);
 	void ServerDecreaseCurrentHealth_Implementation(float serverCurrentHealthDecrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseMaxHealth(float serverMaxHealthIncrease);
 	bool ServerIncreaseMaxHealth_Validate(float serverMaxHealthIncrease);
 	void ServerIncreaseMaxHealth_Implementation(float serverMaxHealthIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseMaxHealth(float serverMaxHealthDecrease);
 	bool ServerDecreaseMaxHealth_Validate(float serverMaxHealthDecrease);
 	void ServerDecreaseMaxHealth_Implementation(float serverMaxHealthDecrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseHealthRegen(float serverHealthRegenIncrease);
 	bool ServerIncreaseHealthRegen_Validate(float serverHealthRegenIncrease);
 	void ServerIncreaseHealthRegen_Implementation(float serverHealthRegenIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseHealthRegen(float serverHealthRegenDecrease);
 	bool ServerDecreaseHealthRegen_Validate(float serverHealthRegenDecrease);
@@ -167,27 +168,22 @@ protected:
 	void ServerIncreaseCurrentStamina(float serverCurrentStaminaIncrease);
 	bool ServerIncreaseCurrentStamina_Validate(float serverCurrentStaminaIncrease);
 	void ServerIncreaseCurrentStamina_Implementation(float serverCurrentStaminaIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseCurrentStamina(float serverCurrentStaminaDecrease);
 	bool ServerDecreaseCurrentStamina_Validate(float serverCurrentStaminaDecrease);
 	void ServerDecreaseCurrentStamina_Implementation(float serverCurrentSaminaDecrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseMaxStamina(float serverMaxStaminaIncrease);
 	bool ServerIncreaseMaxStamina_Validate(float serverMaxStaminaIncrease);
 	void ServerIncreaseMaxStamina_Implementation(float serverMaxStaminaIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseMaxStamina(float serverMaxStaminaDecrease);
 	bool ServerDecreaseMaxStamina_Validate(float serverMaxStaminaDecrease);
 	void ServerDecreaseMaxStamina_Implementation(float serverMaxStaminaDecrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseStaminaRegen(float serverStaminaRegenIncrease);
 	bool ServerIncreaseStaminaRegen_Validate(float serverStaminaRegenIncrease);
 	void ServerIncreaseStaminaRegen_Implementation(float serverStaminaRegenIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseStaminaRegen(float serverStaminaRegenDecrease);
 	bool ServerDecreaseStaminaRegen_Validate(float serverStaminaRegenDecrease);
@@ -198,27 +194,22 @@ protected:
 	void ServerIncreaseCurrentMana(float serverCurrentManaIncrease);
 	bool ServerIncreaseCurrentMana_Validate(float serverCurrentManaIncrease);
 	void ServerIncreaseCurrentMana_Implementation(float serverCurrentManaIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseCurrentMana(float serverCurrentManaDecrease);
 	bool ServerDecreaseCurrentMana_Validate(float serverCurrentManaDecrease);
 	void ServerDecreaseCurrentMana_Implementation(float serverCurrentManaDecrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseMaxMana(float serverMaxManaIncrease);
 	bool ServerIncreaseMaxMana_Validate(float serverMaxManaIncrease);
 	void ServerIncreaseMaxMana_Implementation(float serverMaxManaIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseMaxMana(float serverMaxManaDecrease);
 	bool ServerDecreaseMaxMana_Validate(float serverMaxManaDecrease);
 	void ServerDecreaseMaxMana_Implementation(float serverMaxManaDecrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseManaRegen(float serverManaRegenIncrease);
 	bool ServerIncreaseManaRegen_Validate(float serverManaRegenIncrease);
 	void ServerIncreaseManaRegen_Implementation(float serverManaRegenIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseManaRegen(float serverManaRegenDecrease);
 	bool ServerDecreaseManaRegen_Validate(float serverManaRegenDecrease);
@@ -237,27 +228,22 @@ protected:
 	void ServerIncreaseBronzeCoins(float serverBronzeCoinIncrease);
 	bool ServerIncreaseBronzeCoins_Validate(float serverBronzeCoinIncrease);
 	void ServerIncreaseBronzeCoins_Implementation(float serverBronzeCoinIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseBronzeCoins(float serverBronzeCoinDecrease);
 	bool ServerDecreaseBronzeCoins_Validate(float serverBronzeCoinDecrease);
 	void ServerDecreaseBronzeCoins_Implementation(float serverBronzeCoinDecrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseSilverCoins(float serverSilverCoinIncrease);
 	bool ServerIncreaseSilverCoins_Validate(float serverSilverCoinIncrease);
 	void ServerIncreaseSilverCoins_Implementation(float serverSilverCoinIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseSilverCoins(float serverSilverCoinDecrease);
 	bool ServerDecreaseSilverCoins_Validate(float serverSilverCoinDecrease);
 	void ServerDecreaseSilverCoins_Implementation(float serverSilverCoinDecrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseGoldCoins(float serverGoldCoinIncrease);
 	bool ServerIncreaseGoldCoins_Validate(float serverGoldCoinIncrease);
 	void ServerIncreaseGoldCoins_Implementation(float serverGoldCoinIncrease);
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDecreaseGoldCoins(float serverGoldCoinDecrease);
 	bool ServerDecreaseGoldCoins_Validate(float serverGoldCoinDecrease);
@@ -295,6 +281,26 @@ protected:
 	bool ServerIncreaseAgility_Validate(float serverAgilityIncrease);
 	void ServerIncreaseAgility_Implementation(float serverAgilityIncrease);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseStealth(float serverStealthIncrease);
+	bool ServerIncreaseStealth_Validate(float serverStealthIncrease);
+	void ServerIncreaseStealth_Implementation(float serverStealthIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseIntelligence(float serverIntelligenceIncrease);
+	bool ServerIncreaseIntelligence_Validate(float serverIntelligenceIncrease);
+	void ServerIncreaseIntelligence_Implementation(float serverIntelligenceIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseLuck(float serverLuckIncrease);
+	bool ServerIncreaseLuck_Validate(float serverLuckIncrease);
+	void ServerIncreaseLuck_Implementation(float serverLuckIncrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseUnarmedCombat(float serverUnarmedCombatIncrease);
+	bool ServerIncreaseUnarmedCombat_Validate(float serverUnarmedCombatIncrease);
+	void ServerIncreaseUnarmedCombat_Implementation(float serverUnarmedCombatIncrease);
+
 	// Server Base Stats Decrease Function
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -326,6 +332,26 @@ protected:
 	void ServerDecreaseAgility(float serverAgilityDecrease);
 	bool ServerDecreaseAgility_Validate(float serverAgilityDecrease);
 	void ServerDecreaseAgility_Implementation(float serverAgilityDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseStealth(float serverStealthDecrease);
+	bool ServerDecreaseStealth_Validate(float serverStealthDecrease);
+	void ServerDecreaseStealth_Implementation(float serverStealthDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseIntelligence(float serverIntelligenceDecrease);
+	bool ServerDecreaseIntelligence_Validate(float serverIntelligenceDecrease);
+	void ServerDecreaseIntelligence_Implementation(float serverIntelligenceDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseLuck(float serverLuckDecrease);
+	bool ServerDecreaseLuck_Validate(float serverLuckDecrease);
+	void ServerDecreaseLuck_Implementation(float serverLuckDecrease);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseUnarmedCombat(float serverUnarmedCombatDecrease);
+	bool ServerDecreaseUnarmedCombat_Validate(float serverUnarmedCombatDecrease);
+	void ServerDecreaseUnarmedCombat_Implementation(float serverUnarmedCombatDecrease);
 
 	// Collison Radius Server Functions
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -368,6 +394,10 @@ public:
 	void IncreaseBravery(float increaseBravery);
 	void IncreaseEndurance(float increaseEndurance);
 	void IncreaseAgility(float increaseAgility);
+	void IncreaseStealth(float increaseStealth);
+	void IncreaseIntelligence(float increaseIntelligence);
+	void IncreaseLuck(float increaseLuck);
+	void IncreaseUnarmedCombat(float increaseUnarmedCombat);
 	//Non Server Decrease Base Stat Function
 	void DecreaseStrength(float decreaseStrength);
 	void DecreaseCharm(float decreaseCharm);
@@ -375,6 +405,10 @@ public:
 	void DecreaseBravery(float decreaseBravery);
 	void DecreaseEndurance(float decreaseEndurance);
 	void DecreaseAgility(float decreaseAgility);
+	void DecreaseStealth(float decreaseStealth);
+	void DecreaseIntelligence(float decreaseIntelligence);
+	void DecreaseLuck(float decreaseLuck);
+	void DecreaseUnarmedCombat(float decreaseUnarmedCombat);
 	// Non Server Collison Functions
 	UFUNCTION(BlueprintCallable, Category = "Collison")
 	float GetCollisonRadius();
@@ -386,66 +420,61 @@ public:
 	void IncreaseBronzeCoins(float increaseBronzeCoin);
 	void IncreaseSilverCoins(float increaseSilverCoin);
 	void IncreaseGoldCoins(float increaseGoldCoin);
-	void DecreaseBronzeCoins(float DecreaseBronzeCoin);
-	void DecreaseSilverCoins(float DecreaseSilverCoin);
-	void DecreaseGoldCoins(float DecreaseGoldCoin);
+	void DecreaseBronzeCoins(float decreaseBronzeCoin);
+	void DecreaseSilverCoins(float decreaseSilverCoin);
+	void DecreaseGoldCoins(float decreaseGoldCoin);
 
 	// Health Getter Function
 	UFUNCTION(BlueprintCallable, Category = "Health Getter")
 	float GetCurrentHealth();
-	
 	UFUNCTION(BlueprintCallable, Category = "Health Getter")
 	float GetMaxHealth();
-
 	UFUNCTION(BlueprintCallable, Category = "Health Getter")
 	float GetHealthRegenRate();
 
 	// Stamina Getter Function
 	UFUNCTION(BlueprintCallable, Category = "StaminaGetter")
 	float GetCurrentStamina();
-
 	UFUNCTION(BlueprintCallable, Category = "Stamina Getter")
 	float GetMaxStamina();
-
 	UFUNCTION(BlueprintCallable, Category = "Stamina Getter")
 	float GetStaminaRegenRate();
 
 	//Mana Getter Function
 	UFUNCTION(BlueprintCallable, Category = "Mana Getter")
 	float GetCurrentMana();
-
 	UFUNCTION(BlueprintCallable, Category = "Mana Getter")
 	float GetMaxMana();
-
 	UFUNCTION(BlueprintCallable, Category = "Mana Getter")
 	float GetManaRegenRate();
 
 	// Base Stats Getter Functions
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetStrength();
-
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetCharm();
-
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetPerception();
-
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetBravery();
-
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetEndurance();
-
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	float GetAgility();
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetStealth();
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetIntelligence();
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetLuck();
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	float GetUnarmedCombat();
 
 	//Coin Getter Function
 	UFUNCTION(BlueprintCallable, Category = "Coin Getter")
 	float GetBronzeCoins();
-
 	UFUNCTION(BlueprintCallable, Category = "Coin Getter")
 	float GetSilverCoins();
-
 	UFUNCTION(BlueprintCallable, Category = "Coin Getter")
 	float GetGoldCoins();
 
