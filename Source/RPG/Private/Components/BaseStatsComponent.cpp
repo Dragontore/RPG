@@ -766,6 +766,7 @@ void UBaseStatsComponent::DecreaseBronzeCoins(float decreaseBronzeCoin)
 		{
 			SilverCoin -= 1;
 			BronzeCoin += 100;
+			BronzeCoin -= decreaseBronzeCoin;
 		}
 		else if (BronzeCoin -= decreaseBronzeCoin < 0)
 		{
@@ -789,13 +790,13 @@ void UBaseStatsComponent::DecreaseSilverCoins(float decreaseSilverCoin)
 		{
 			GoldCoin -= 1;
 			SilverCoin += 100;
+			SilverCoin -= decreaseSilverCoin;
 		}
 		else if (SilverCoin -= decreaseSilverCoin < 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Not Enought Money"))
 			return;
 		}
-		
 		SilverCoin -= decreaseSilverCoin;
 	}
 }
