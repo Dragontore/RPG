@@ -87,6 +87,18 @@ protected:
 	void UndoStatTimer();
 	float Counter;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
+	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
+	FString Action;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
+	FString Decription;
+
+	UFUNCTION(BluePrintCallable, Category = "UI")
+	FString GetUseText()const;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ENUMS")
 	EPickupType PickupType;
 

@@ -39,6 +39,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collison")
 	float CollisonRadius;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
+		FText Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
+		FText Action;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
+		FText Decription;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
