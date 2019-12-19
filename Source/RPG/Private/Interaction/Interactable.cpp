@@ -7,6 +7,9 @@
 #include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
 
+#include "Components/InteractableInfoComponent.h"
+
+
 // Sets default values
 AInteractable::AInteractable()
 {
@@ -18,13 +21,14 @@ AInteractable::AInteractable()
 
 	CollisonSphere = CreateDefaultSubobject<USphereComponent>("Collision Sphere");
 	CollisonSphere->SetupAttachment(InteractionMeshComp);
-	CollisonSphere->InitSphereRadius(CollisonRadius);
+	CollisonSphere->SetSphereRadius(CollisonRadius);
 
 	HoldingMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("Interaction Mesh Holder");
 	HoldingMeshComp->SetupAttachment(InteractionMeshComp);
 
-	//Default Values
-	CollisonRadius = 500.f;
+	InteractableInfo = CreateDefaultSubobject<UInteractableInfoComponent>(TEXT("Interactable Info"));
+
+
 }
 
 // Called when the game starts or when spawned
@@ -32,6 +36,9 @@ void AInteractable::BeginPlay()
 {
 	Super::BeginPlay();
 	SetReplicates(true);
+
+	//Default Values
+	CollisonRadius = 150.f;
 	
 }
 

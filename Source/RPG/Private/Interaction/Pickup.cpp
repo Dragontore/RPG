@@ -13,15 +13,23 @@
 
 #include "Character/BaseCharacter.h"
 #include "Components/BaseStatsComponent.h"
+#include "Components/InteractableInfoComponent.h"
 
 // Sets default values
 APickup::APickup()
 {
+
+	SphereRadius = 150.f;
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	RootComponent = MeshComp;
 
 	CollisonSphere = CreateDefaultSubobject<USphereComponent>("Collision Sphere");
 	CollisonSphere->SetupAttachment(MeshComp);
+	CollisonSphere->SetSphereRadius(SphereRadius);
+
+	CollisonSphere->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnOverlapBegin);
+
+	InteractableInfo = CreateDefaultSubobject<UInteractableInfoComponent>(TEXT("Interactable Info"));
 
 	PickupType = EPickupType::PT_None;
 	CoinType = ECoinType::CT_None;
@@ -268,11 +276,6 @@ void APickup::UndoStatTimer()
 	}
 }
 
-FString APickup::GetUseText() const
-{
-		return FString::Printf(TEXT("%s: Press E To %s"), *Name, *Action);
-}
-
 bool APickup::MultiDestroyActor_Validate()
 {
 	return true;
@@ -450,9 +453,27 @@ void APickup::UseItem(ABaseCharacter* Player)
 			}
  }
 		}
-		//MultiDestroyActor();
+		MultiDestroyActor();
 	}
 }
+
+void APickup::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		if (ABaseCharacter* Character = Cast<ABaseCharacter>(OtherActor))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Overlap Called"));
+			//GetUseText();
+		}
+	}
+}
+
+//*FString APickup::GetUseText() const
+//{
+	//UE_LOG(LogTemp, Warning, TEXT("Function Called"));
+	//return FString::Printf(TEXT("%s : Press E To : %s"), *InteractableInfo->GetName(), *InteractableInfo->GetAction());
+//}
 
 
 

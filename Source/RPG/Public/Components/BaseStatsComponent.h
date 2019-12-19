@@ -16,6 +16,10 @@ class RPG_API UBaseStatsComponent : public UActorComponent
 
 public:
 
+	//Collison Sphere Setting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collison")
+	USphereComponent* CollisonSphere;
+
 protected:
 
 	FTimerHandle HealthTimerHandle;
@@ -118,10 +122,6 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	//Collison Sphere Setting
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collison")
-	USphereComponent* CollisonSphere;
 
 	void SetTimers();
 

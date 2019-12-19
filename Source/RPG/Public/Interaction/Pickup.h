@@ -9,6 +9,7 @@
 class UStaticMeshComponent;
 class USphereComponent;
 class ABaseCharacter;
+class UInteractableInfoComponent;
 
 // add struct for default value
 
@@ -56,13 +57,19 @@ public:
 	// Sets default values for this actor's properties
 	APickup();
 
-protected: 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UInteractableInfoComponent* InteractableInfo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
 	UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
 	USphereComponent* CollisonSphere;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collison")
+	float SphereRadius;
+
+protected: 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float IncreaseAmount;
@@ -87,18 +94,6 @@ protected:
 	void UndoStatTimer();
 	float Counter;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
-	FString Name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
-	FString Action;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
-	FString Decription;
-
-	UFUNCTION(BluePrintCallable, Category = "UI")
-	FString GetUseText()const;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ENUMS")
 	EPickupType PickupType;
 
@@ -118,4 +113,9 @@ public:
 	UFUNCTION()
 	void UseItem(ABaseCharacter* Player);
 
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	//UFUNCTION(BlueprintCallable, Category = "Interaction Info")
+	//FString GetUseText() const;
 };

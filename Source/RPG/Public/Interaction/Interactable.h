@@ -9,6 +9,7 @@
 class UStaticMeshComponent;
 class USphereComponent;
 class ABaseCharacter;
+class UInteractableInfoComponent;
 
 UCLASS()
 class RPG_API AInteractable : public AActor
@@ -18,6 +19,9 @@ class RPG_API AInteractable : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AInteractable();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UInteractableInfoComponent* InteractableInfo;
 
 public:
 
@@ -38,15 +42,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collison")
 	float CollisonRadius;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
-		FText Name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
-		FText Action;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Defaults")
-		FText Decription;
 
 protected:
 	// Called when the game starts or when spawned
