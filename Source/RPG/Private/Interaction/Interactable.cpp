@@ -8,11 +8,14 @@
 #include "Net/UnrealNetwork.h"
 
 #include "Components/InteractableInfoComponent.h"
+#include "Character/BaseCharacter.h"
 
 
 // Sets default values
 AInteractable::AInteractable()
 {
+	//Default Values
+	CollisonRadius = 150.f;
 
 	bReplicates = true;
 
@@ -37,9 +40,24 @@ void AInteractable::BeginPlay()
 	Super::BeginPlay();
 	SetReplicates(true);
 
-	//Default Values
-	CollisonRadius = 150.f;
+
 	
+}
+
+void AInteractable::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		if (ABaseCharacter* Character = Cast<ABaseCharacter>(OtherActor))
+		{
+
+		}
+	}
+}
+
+FString AInteractable::GetUseText()
+{
+	return FString::Printf(TEXT("%s : Press E To : %s"), *InteractableInfo->GetName(), *InteractableInfo->GetAction());
 }
 
 

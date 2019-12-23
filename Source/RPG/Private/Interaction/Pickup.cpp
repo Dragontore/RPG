@@ -463,17 +463,15 @@ void APickup::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 	{
 		if (ABaseCharacter* Character = Cast<ABaseCharacter>(OtherActor))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Overlap Called"));
-			//GetUseText();
+			
 		}
 	}
 }
 
-//*FString APickup::GetUseText() const
-//{
-	//UE_LOG(LogTemp, Warning, TEXT("Function Called"));
-	//return FString::Printf(TEXT("%s : Press E To : %s"), *InteractableInfo->GetName(), *InteractableInfo->GetAction());
-//}
+FString APickup::GetUseText()
+{
+	return FString::Printf(TEXT("%s : Press E To : %s"), *InteractableInfo->GetName(), *InteractableInfo->GetAction());
+}
 
 
 
