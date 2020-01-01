@@ -74,7 +74,10 @@ void UBaseStatsComponent::BeginPlay()
 
 	SetIsReplicated(true);
 
-	SetTimers();
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		SetTimers();
+	}
 
 	//TODO Set Function to set base Stats on game start.
 }
@@ -187,8 +190,9 @@ void UBaseStatsComponent::DecreaseCurrentHealth(float healthDecrease)
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
 
-		if (CurrentHealth == 0)
+		if (CurrentHealth <= 0)
 		{
+			CurrentHealth = 0.f;
 			UE_LOG(LogTemp, Warning, TEXT("Dead"));
 		}
 		else
@@ -385,8 +389,9 @@ void UBaseStatsComponent::DecreaseCurrentMana(float manaDecrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		if (CurrentMana == 0)
+		if (CurrentMana <= 0)
 		{
+			CurrentMana = 0.f;
 			UE_LOG(LogTemp, Warning, TEXT("No Mana"));
 		}
 		else

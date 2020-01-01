@@ -28,7 +28,7 @@ void ULineTrace::BeginPlay()
 	
 }
 
-AActor* ULineTrace::LineTraceSingle(FVector Start, FVector End)
+FHitResult ULineTrace::LineTraceSingle(FVector Start, FVector End)
 {
 	FHitResult HitResult;
 	FCollisionObjectQueryParams ObjectQueryParams;
@@ -37,17 +37,17 @@ AActor* ULineTrace::LineTraceSingle(FVector Start, FVector End)
 
 	if (GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, ObjectQueryParams, QueryParams))
 	{
-		return HitResult.GetActor();
+		return HitResult;
 	}
 	else
 	{
-		return nullptr;
+		return HitResult;
 	}
 }
 
-AActor* ULineTrace::LineTraceSingle(FVector Start, FVector End, bool ShowDebugLine)
+FHitResult ULineTrace::LineTraceSingle(FVector Start, FVector End, bool ShowDebugLine)
 {
-	AActor* Actor = LineTraceSingle(Start, End);
+	FHitResult Actor = LineTraceSingle(Start, End);
 	if (ShowDebugLine)
 	{
 		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 3.0f, 0, 5.0f);

@@ -64,7 +64,11 @@ ABaseCharacter::ABaseCharacter()
 	JumpCost = 10.f;
 
 	//Default for Interact
-	LineTraceLength = 150.f;
+	LineTraceLength = 170.f;
+	//Default for Attack One LineTrace
+	AttackOneLength = 5000.f;
+	// Default Die Timer
+	DestroyTime = 10.0f;
 }
 
 // Called when the game starts or when spawned
@@ -108,7 +112,10 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABaseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
 
+	//Custome Input Bindings
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &ABaseCharacter::Interact);
+	//Custome Input Attack Bindings
+	PlayerInputComponent->BindAction("Attack One", IE_Pressed, this, &ABaseCharacter::AttackOne);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -215,16 +222,6 @@ void ABaseCharacter::ControlSprintingHandle()
 	}
 }
 
-void ABaseCharacter::AttempJump()
-{
-	if (BaseStatsComp->GetCurrentStamina() > JumpCost && !GetMovementComponent()->IsFalling())
-	{
-		Jump();
-		StopSprinting();
-		BaseStatsComp->DecreaseCurrentStamina(JumpCost);
-	}
-}
-
 void ABaseCharacter::HandleSprinting()
 {
 	if (Role < ROLE_Authority)
@@ -233,57 +230,12 @@ void ABaseCharacter::HandleSprinting()
 	}
 	else if (Role == ROLE_Authority)
 	{
-		if (bIsSprinting)
+		if (bIsSprinting && this->GetVelocity().Size())
 		{
 			BaseStatsComp->DecreaseCurrentStamina(SprintCost);
 		}
 	}
 }
-
-void ABaseCharacter::Interact()
-{
-	FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
-	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LineTraceLength;
-	AActor* Actor = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
-	if (Actor)
-	{
-		if (APickup* Pickup = Cast<APickup>(Actor))
-		{
-			ServerInteract();
-		}
-		else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
-		{
-			ServerInteract();
-		}
-	}
-}
-
-bool ABaseCharacter::ServerInteract_Validate()
-{
-	return true;
-}
-
-void ABaseCharacter::ServerInteract_Implementation()
-{
-	if (Role == ROLE_Authority)
-	{
-		FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
-		FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LineTraceLength;
-		AActor* Actor = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
-		if (Actor)
-		{
-			if (APickup* Pickup = Cast<APickup>(Actor))
-			{
-				Pickup->UseItem(this);
-			}
-			else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
-			{
-				Interactable->Interact(this);
-			}
-		}
-	}
-}
-
 float ABaseCharacter::GetSprintCost()
 {
 	return SprintCost;
@@ -353,34 +305,6 @@ void ABaseCharacter::ServerControlSprintingHandle_Implementation()
 	}
 }
 
-float ABaseCharacter::ReturnPlayersHealth()
-{
-	float RetCurrentHealth = BaseStatsComp->GetCurrentHealth();
-	float RetMaxHealth = BaseStatsComp->GetMaxHealth();
-
-	float RetHealth = RetCurrentHealth / RetMaxHealth;
-	return RetHealth;
-}
-float ABaseCharacter::ReturnPlayerStamina()
-{
-	float RetCurrentStamina = BaseStatsComp->GetCurrentStamina();
-	float RetMaxStamina = BaseStatsComp->GetMaxStamina();
-
-	float RetStamina = RetCurrentStamina / RetMaxStamina;
-
-	return RetStamina;
-}
-
-float ABaseCharacter::ReturnPlayerMana()
-{
-	float RetCurrentMana = BaseStatsComp->GetCurrentMana();
-	float RetMaxMana = BaseStatsComp->GetMaxMana();
-
-	float RetMana = RetCurrentMana / RetMaxMana;
-
-	return RetMana;
-}
-
 bool ABaseCharacter::ServerStartSprinting_Validate()
 {
 	return true;
@@ -417,4 +341,178 @@ void ABaseCharacter::ServerHandleSprinting_Implementation()
 	{
 		HandleSprinting();
 	}
+}
+
+void ABaseCharacter::AttempJump()
+{
+	if (BaseStatsComp->GetCurrentStamina() > JumpCost && !GetMovementComponent()->IsFalling())
+	{
+		Jump();
+		StopSprinting();
+		BaseStatsComp->DecreaseCurrentStamina(JumpCost);
+	}
+}
+
+void ABaseCharacter::Interact()
+{
+	FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
+	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LineTraceLength;
+	FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
+	if (AActor* Actor = HitResult.GetActor())
+	{
+		if (APickup* Pickup = Cast<APickup>(Actor))
+		{
+			ServerInteract();
+		}
+		else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
+		{
+			ServerInteract();
+		}
+	}
+}
+
+bool ABaseCharacter::ServerInteract_Validate()
+{
+	return true;
+}
+
+void ABaseCharacter::ServerInteract_Implementation()
+{
+	if (Role == ROLE_Authority)
+	{
+		FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
+		FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LineTraceLength;
+		FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
+		if (AActor* Actor = HitResult.GetActor())
+		{
+			if (APickup* Pickup = Cast<APickup>(Actor))
+			{
+				Pickup->UseItem(this);
+			}
+			else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
+			{
+				Interactable->Interact(this);
+			}
+		}
+	}
+}
+
+void ABaseCharacter::AttackOne()
+{
+	FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
+	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * AttackOneLength;
+	FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
+	if (AActor* Actor = HitResult.GetActor())
+	{
+		if (ABaseCharacter* Character = Cast<ABaseCharacter>(Actor))
+		{
+			ServerAttackOne();
+		}
+	}
+}
+
+bool ABaseCharacter::ServerAttackOne_Validate()
+{
+	return true;
+}
+
+void ABaseCharacter::ServerAttackOne_Implementation()
+{
+	if (Role == ROLE_Authority)
+	{
+		FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
+		FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * AttackOneLength;
+		FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
+		if (AActor* Actor = HitResult.GetActor())
+		{
+			if (ABaseCharacter* Character = Cast<ABaseCharacter>(Actor))
+			{
+				float TestDamage = 20.f; // TODO Remove and action Actual Damage
+				Character->TakeDamage(TestDamage, FDamageEvent(), GetController(), this);
+			}
+		}
+	}
+}
+
+float ABaseCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (Role < ROLE_Authority || BaseStatsComp->GetCurrentHealth() <= 0.0f)
+	{
+		return 0.0f;
+	}
+	// Call the base class - this will tell us how much damage to apply  
+	const float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	if (ActualDamage > 0.0f)
+	{
+		BaseStatsComp->DecreaseCurrentHealth(ActualDamage);
+		if (BaseStatsComp->GetCurrentHealth() <= 0)
+		{
+			Die();
+
+		}
+	}
+	return ActualDamage;
+}
+
+//Temp Function
+void ABaseCharacter::CallDestroy()
+{
+	if (Role == ROLE_Authority)
+	{
+		Destroy();
+	}
+}
+
+//Die Funtions
+
+void ABaseCharacter::Die()
+{
+	if (Role == ROLE_Authority)
+	{
+		MultiDie();
+		// Start Destroy Timer
+		GetWorld()->GetTimerManager().SetTimer(DestroyHandle, this, &ABaseCharacter::CallDestroy, DestroyTime, false);
+	}
+}
+
+bool ABaseCharacter::MultiDie_Validate()
+{
+	return true;
+}
+
+void ABaseCharacter::MultiDie_Implementation()
+{
+	// TODO Play Anim Montage of death
+	//Rag Doll
+	this->GetCharacterMovement()->DisableMovement();
+	this->GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	this->GetMesh()->SetAllBodiesSimulatePhysics(true);
+}
+
+float ABaseCharacter::ReturnPlayersHealth()
+{
+	float RetCurrentHealth = BaseStatsComp->GetCurrentHealth();
+	float RetMaxHealth = BaseStatsComp->GetMaxHealth();
+
+	float RetHealth = RetCurrentHealth / RetMaxHealth;
+	return RetHealth;
+}
+float ABaseCharacter::ReturnPlayerStamina()
+{
+	float RetCurrentStamina = BaseStatsComp->GetCurrentStamina();
+	float RetMaxStamina = BaseStatsComp->GetMaxStamina();
+
+	float RetStamina = RetCurrentStamina / RetMaxStamina;
+
+	return RetStamina;
+}
+
+float ABaseCharacter::ReturnPlayerMana()
+{
+	float RetCurrentMana = BaseStatsComp->GetCurrentMana();
+	float RetMaxMana = BaseStatsComp->GetMaxMana();
+
+	float RetMana = RetCurrentMana / RetMaxMana;
+
+	return RetMana;
 }

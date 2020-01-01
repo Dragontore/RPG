@@ -38,7 +38,11 @@ AInteractable::AInteractable()
 void AInteractable::BeginPlay()
 {
 	Super::BeginPlay();
-	SetReplicates(true);
+
+	if (Role == ROLE_Authority)
+	{
+		SetReplicates(true);
+	}
 
 
 	

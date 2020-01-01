@@ -45,7 +45,11 @@ APickup::APickup()
 void APickup::BeginPlay()
 {
 	Super::BeginPlay();
-	SetReplicates(true);
+
+	if (Role == ROLE_Authority)
+	{
+		SetReplicates(true);
+	}
 
 	
 }
@@ -276,16 +280,6 @@ void APickup::UndoStatTimer()
 	}
 }
 
-bool APickup::MultiDestroyActor_Validate()
-{
-	return true;
-}
-
-void APickup::MultiDestroyActor_Implementation()
-{
-	Destroy();
-}
-
 void APickup::UseItem(ABaseCharacter* Player)
 {
 	if (Role == ROLE_Authority)
@@ -453,7 +447,7 @@ void APickup::UseItem(ABaseCharacter* Player)
 			}
  }
 		}
-		MultiDestroyActor();
+		Destroy();
 	}
 }
 

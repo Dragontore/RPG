@@ -22,8 +22,8 @@ protected:
 
 public:	
 
-	AActor* LineTraceSingle(FVector Start, FVector End);
-	AActor* LineTraceSingle(FVector Start, FVector End, bool ShowDebugLine);
+	FHitResult LineTraceSingle(FVector Start, FVector End);
+	FHitResult LineTraceSingle(FVector Start, FVector End, bool ShowDebugLine);
 
 
 		

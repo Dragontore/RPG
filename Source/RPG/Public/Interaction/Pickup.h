@@ -103,11 +103,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ENUMS")
 	EBaseStatType StatsType;
 
-	UFUNCTION(NetMulticast, Reliable, WithValidation)
-	void MultiDestroyActor();
-	bool MultiDestroyActor_Validate();
-	void MultiDestroyActor_Implementation();
-
 public:	
 
 	UFUNCTION()

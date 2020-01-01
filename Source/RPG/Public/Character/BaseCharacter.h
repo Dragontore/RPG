@@ -65,6 +65,11 @@ protected:
 	void HandleSprinting();
 	float SprintTime;
 
+	// Die Varibles
+	FTimerHandle DestroyHandle;
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Timers")
+	float DestroyTime;
+
 	//Function to display Health Bar
 	UFUNCTION(Blueprintpure, Category = "Stats")
 	float ReturnPlayersHealth();
@@ -81,8 +86,26 @@ protected:
 	void Interact();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interact")
 	float LineTraceLength;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interact")
+	float AttackOneLength;
 
-protected:
+	//Base Attack TODO Action Bars
+
+	void AttackOne();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAttackOne();
+	bool ServerAttackOne_Validate();
+	void ServerAttackOne_Implementation();
+
+	//die functions
+	void Die();
+	void CallDestroy(); //Temp Function
+
+	UFUNCTION(NetMulticast, Reliable, WithValidation)
+	void MultiDie();
+	bool MultiDie_Validate();
+	void MultiDie_Implementation();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -153,14 +176,14 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-protected:
-	
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
 
 
 public:
