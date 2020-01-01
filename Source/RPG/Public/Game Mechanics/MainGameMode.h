@@ -13,5 +13,12 @@ UCLASS()
 class RPG_API AMainGameMode : public AGameMode
 {
 	GENERATED_BODY()
+
+public: 
+	AMainGameMode();
+
+public:
+
+	void Respawn(AController* Controller);
 	
 };

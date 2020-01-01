@@ -19,6 +19,7 @@
 #include "Components/LineTrace.h"
 #include "Interaction/Pickup.h"
 #include "Interaction/Interactable.h"
+#include "Game Mechanics/MainGameMode.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -470,6 +471,12 @@ void ABaseCharacter::Die()
 	if (Role == ROLE_Authority)
 	{
 		MultiDie();
+		AGameModeBase* BaseGameMode = GetWorld()->GetAuthGameMode();
+		if (AMainGameMode* GameMode = Cast<AMainGameMode>(BaseGameMode))
+		{
+			GameMode->Respawn(GetController());
+		}
+
 		// Start Destroy Timer
 		GetWorld()->GetTimerManager().SetTimer(DestroyHandle, this, &ABaseCharacter::CallDestroy, DestroyTime, false);
 	}
@@ -484,6 +491,7 @@ void ABaseCharacter::MultiDie_Implementation()
 {
 	// TODO Play Anim Montage of death
 	//Rag Doll
+	this->GetCapsuleComponent()->DestroyComponent();
 	this->GetCharacterMovement()->DisableMovement();
 	this->GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	this->GetMesh()->SetAllBodiesSimulatePhysics(true);
