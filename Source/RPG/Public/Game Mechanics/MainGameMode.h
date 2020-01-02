@@ -17,6 +17,17 @@ class RPG_API AMainGameMode : public AGameMode
 public: 
 	AMainGameMode();
 
+	void SetRespawnLocation(FVector respawnLocation);
+
+protected:
+
+	FVector SpawnPoint;
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSetRespawnLocation(FVector serverRespawnLocation);
+	bool ServerSetRespawnLocation_Validate(FVector serverRespawnLocation);
+	void ServerSetRespawnLocation_Implementation(FVector serverRespawnLocation);
+
 public:
 
 	void Respawn(AController* Controller);
