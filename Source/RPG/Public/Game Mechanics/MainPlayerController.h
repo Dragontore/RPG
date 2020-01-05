@@ -13,5 +13,22 @@ UCLASS()
 class RPG_API AMainPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+		AMainPlayerController();
+		
+public:
+
+	UPROPERTY(Replicated)
+	FVector SpawnPoint;
+
+	UFUNCTION()
+	void SetRespawnLocation(FVector respawnLocation);
+
+protected:
+
+	UFUNCTION(Client, Reliable, WithValidation)
+	void ClientSetRespawnLocation(FVector clientRespawnLocation);
+	bool ClientSetRespawnLocation_Validate(FVector clientRespawnLocation);
+	void ClientSetRespawnLocation_Implementation(FVector clientRespawnLocation);
 	
 };

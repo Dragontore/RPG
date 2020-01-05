@@ -70,6 +70,7 @@ ABaseCharacter::ABaseCharacter()
 	AttackOneLength = 5000.f;
 	// Default Die Timer
 	DestroyTime = 10.0f;
+
 }
 
 // Called when the game starts or when spawned

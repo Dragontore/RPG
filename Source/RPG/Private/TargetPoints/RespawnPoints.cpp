@@ -8,7 +8,9 @@
 #include "Engine/Engine.h"
 
 #include "Game Mechanics/MainGameMode.h"
+#include "Game Mechanics/MainPlayerController.h"
 #include "Character/BaseCharacter.h"
+#include "Kismet/GameplayStatics.h"
  
 ARespawnPoints::ARespawnPoints()
 {
@@ -29,12 +31,12 @@ void ARespawnPoints::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 			if (ABaseCharacter* Character = Cast<ABaseCharacter>(OtherActor))
 			{
-				AGameModeBase* BaseGamemode = GetWorld()->GetAuthGameMode();
-				FVector Location = GetActorLocation();
-				if (AMainGameMode* GameMode = Cast<AMainGameMode>(BaseGamemode))
+				UE_LOG(LogTemp, Warning, TEXT("Overlap"));
+				AMainPlayerController* Controller = Cast<AMainPlayerController>(GetWorld()->GetFirstPlayerController());
+				if (Controller != nullptr)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Overlap"));
-					GameMode->SetRespawnLocation(Location);
+					FVector Location = GetActorLocation();
+					Controller->SetRespawnLocation(Location);
 				}
 				
 			}
