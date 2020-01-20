@@ -21,14 +21,26 @@ public:
 	UPROPERTY(Replicated)
 	FVector SpawnPoint;
 
+	UPROPERTY(Replicated)
+	bool SpawnPointSet;
+
 	UFUNCTION()
 	void SetRespawnLocation(FVector respawnLocation);
 
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	FVector GetSpawnPoint();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 
-	UFUNCTION(Client, Reliable, WithValidation)
-	void ClientSetRespawnLocation(FVector clientRespawnLocation);
-	bool ClientSetRespawnLocation_Validate(FVector clientRespawnLocation);
-	void ClientSetRespawnLocation_Implementation(FVector clientRespawnLocation);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSetRespawnLocation(FVector serverRespawnLocation);
+	bool ServerSetRespawnLocation_Validate(FVector serverRespawnLocation);
+	void ServerSetRespawnLocation_Implementation(FVector serverRespawnLocation);
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	
 };

@@ -31,12 +31,12 @@ void ARespawnPoints::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 			if (ABaseCharacter* Character = Cast<ABaseCharacter>(OtherActor))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Overlap"));
-				AMainPlayerController* Controller = Cast<AMainPlayerController>(GetWorld()->GetFirstPlayerController());
-				if (Controller != nullptr)
+				AMainPlayerController* MainController = Cast<AMainPlayerController>(Character->GetController());
+				if (MainController != NULL)
 				{
+					UE_LOG(LogTemp, Warning, TEXT("Overlap"));
 					FVector Location = GetActorLocation();
-					Controller->SetRespawnLocation(Location);
+					MainController->SetRespawnLocation(Location);
 				}
 				
 			}

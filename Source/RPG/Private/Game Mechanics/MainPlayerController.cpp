@@ -7,42 +7,63 @@
 #include "Engine/Engine.h"
 #include "TimerManager.h"
 #include "Net/UnrealNetwork.h"
+#include "Kismet/GameplayStatics.h"
 
 AMainPlayerController::AMainPlayerController()
 {
-	SpawnPoint = FVector(-840.0f, -150.0f, 405.0f);
+
 }
 
 void AMainPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION(AMainPlayerController, SpawnPoint, COND_OwnerOnly);
+	DOREPLIFETIME(AMainPlayerController, SpawnPoint);
 }
 
 void AMainPlayerController::SetRespawnLocation(FVector respawnLocation)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Set Spawn Point"))
+
 		if (Role < ROLE_Authority)
 		{
-			ClientSetRespawnLocation(respawnLocation);
+			ServerSetRespawnLocation(respawnLocation);
 		}
 		else if (Role == ROLE_Authority)
 		{
 
 			SpawnPoint = respawnLocation;
+
 		}
 }
 
-bool AMainPlayerController::ClientSetRespawnLocation_Validate(FVector clientRespawnLocation)
+FVector AMainPlayerController::GetSpawnPoint()
+{
+	return SpawnPoint;
+}
+
+void AMainPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	UE_LOG(LogTemp, Warning, TEXT("Controller: %s Set Spawn Point %s"), *this->GetName(), *SpawnPoint.ToString())
+}
+
+bool AMainPlayerController::ServerSetRespawnLocation_Validate(FVector aerverRespawnLocation)
 {
 	return true;
 }
 
-void AMainPlayerController::ClientSetRespawnLocation_Implementation(FVector clientRespawnLocation)
+void AMainPlayerController::ServerSetRespawnLocation_Implementation(FVector serverRespawnLocation)
 {
 	if (Role == ROLE_Authority)
 	{
-		SetRespawnLocation(clientRespawnLocation);
+		SetRespawnLocation(serverRespawnLocation);
+
 	}
+}
+
+void AMainPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	SpawnPoint = FVector(-680.f, -350.f, 140.f);
 }

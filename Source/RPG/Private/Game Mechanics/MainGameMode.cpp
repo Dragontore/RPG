@@ -19,6 +19,8 @@ AMainGameMode::AMainGameMode()
 	{
 		DefaultPawnClass = PlayerPawnClass.Class;
 	}
+
+	PlayerControllerClass = AMainPlayerController::StaticClass();
 }
 
 void AMainGameMode::Respawn(AController* Controller)
@@ -28,11 +30,13 @@ void AMainGameMode::Respawn(AController* Controller)
 		if (Role == ROLE_Authority)
 		{
 			//TODO Set Respawn point to Target Points
-				UE_LOG(LogTemp, Warning, TEXT("Function Call"));
-				FVector Location = FVector(-400.0f, 50.0f, 2000.f);
-				AMainPlayerController* PlayerController = Cast<AMainPlayerController>(GetWorld()->GetFirstPlayerController());
-				if (APawn* Pawn = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, PlayerController->SpawnPoint, FRotator::ZeroRotator))
+
+				ABaseCharacter* Character = Cast<ABaseCharacter>(Controller->GetPawn());
+				AMainPlayerController* PlayerController = Cast<AMainPlayerController>(Character->GetController());
+				FVector NewSpawnPoint = PlayerController->SpawnPoint;
+				if (APawn* Pawn = GetWorld()->SpawnActor<ABaseCharacter>(DefaultPawnClass, NewSpawnPoint, FRotator::ZeroRotator))
 				{
+					UE_LOG(LogTemp, Warning, TEXT("Spawn Point : %s"), *NewSpawnPoint.ToString());
 					Controller->Possess(Pawn);
 				}
 		}
