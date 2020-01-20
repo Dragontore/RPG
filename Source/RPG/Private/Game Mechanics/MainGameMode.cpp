@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 #include "TargetPoints/RespawnPoints.h"
 #include "Character/BaseCharacter.h"
@@ -21,6 +22,13 @@ AMainGameMode::AMainGameMode()
 	}
 
 	PlayerControllerClass = AMainPlayerController::StaticClass();
+	RespawnTimer = 5.0f;
+}
+
+void AMainGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+	//TODO Possible random Spawn point. look at video 8 onwards
 }
 
 void AMainGameMode::Respawn(AController* Controller)
@@ -39,6 +47,19 @@ void AMainGameMode::Respawn(AController* Controller)
 					UE_LOG(LogTemp, Warning, TEXT("Spawn Point : %s"), *NewSpawnPoint.ToString());
 					Controller->Possess(Pawn);
 				}
+		}
+	}
+}
+
+void AMainGameMode::Spawn(AController* Controller)
+{
+	if (Controller)
+	{
+		if (Role == ROLE_Authority)
+		{
+			FTimerDelegate RespawnDelegate;
+			RespawnDelegate.BindUFunction(this, FName("Respawn"), Controller);
+			GetWorld()->GetTimerManager().SetTimer(RespawnHandle, RespawnDelegate, RespawnTimer, false);
 		}
 	}
 }

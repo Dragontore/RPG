@@ -44,7 +44,6 @@ FVector AMainPlayerController::GetSpawnPoint()
 void AMainPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UE_LOG(LogTemp, Warning, TEXT("Controller: %s Set Spawn Point %s"), *this->GetName(), *SpawnPoint.ToString())
 }
 
 bool AMainPlayerController::ServerSetRespawnLocation_Validate(FVector aerverRespawnLocation)

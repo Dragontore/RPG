@@ -10,6 +10,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UBaseStatsComponent;
 class ULineTrace;
+class UInventory;
 
 UCLASS()
 class RPG_API ABaseCharacter : public ACharacter
@@ -22,7 +23,7 @@ class RPG_API ABaseCharacter : public ACharacter
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+	UCameraComponent* FollowCamera;
 
 public:
 	// Sets default values for this character's properties
@@ -50,6 +51,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBaseStatsComponent* BaseStatsComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UInventory* Inventory;
 
 protected:
 

@@ -19,11 +19,24 @@ public:
 	AMainGameMode();
 
 protected:
+	
+	UPROPERTY()
+	FTimerHandle RespawnHandle;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timers")
+	float RespawnTimer;
 
+protected:
+
+	UFUNCTION()
+	void Respawn(AController* Controller);
+
+	UFUNCTION()
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 public:
 
-	void Respawn(AController* Controller);
+	UFUNCTION()
+	void Spawn(AController* Controller);
 	
 };

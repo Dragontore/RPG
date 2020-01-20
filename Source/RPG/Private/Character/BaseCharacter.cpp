@@ -20,6 +20,7 @@
 #include "Interaction/Pickup.h"
 #include "Interaction/Interactable.h"
 #include "Game Mechanics/MainGameMode.h"
+#include "Components/Inventory.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -55,6 +56,7 @@ ABaseCharacter::ABaseCharacter()
 
 	BaseStatsComp = CreateDefaultSubobject<UBaseStatsComponent>(TEXT("Base Stats Component"));
 	LineTraceComp = CreateDefaultSubobject<ULineTrace>(TEXT("Line Trace Component"));
+	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory Component"));
 
 	//Default for Sprinting
 	bIsSprinting = false;
@@ -69,7 +71,7 @@ ABaseCharacter::ABaseCharacter()
 	//Default for Attack One LineTrace
 	AttackOneLength = 5000.f;
 	// Default Die Timer
-	DestroyTime = 10.0f;
+	DestroyTime = 10.0f; //TODO Test for best destroy Time
 
 }
 
@@ -389,7 +391,7 @@ void ABaseCharacter::ServerInteract_Implementation()
 		{
 			if (APickup* Pickup = Cast<APickup>(Actor))
 			{
-				Pickup->UseItem(this);
+				Inventory->AddItem(Pickup);
 			}
 			else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
 			{
@@ -475,7 +477,7 @@ void ABaseCharacter::Die()
 		AGameModeBase* BaseGameMode = GetWorld()->GetAuthGameMode();
 		if (AMainGameMode* GameMode = Cast<AMainGameMode>(BaseGameMode))
 		{
-			GameMode->Respawn(GetController());
+			GameMode->Spawn(GetController());
 		}
 
 		// Start Destroy Timer
