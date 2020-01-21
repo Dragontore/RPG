@@ -36,6 +36,7 @@ UBaseStatsComponent::UBaseStatsComponent()
 	StaminaIncreaseRate = 5.f;
 	StaminaDecreaseRate = 5.f;
 
+	//TODO Change Mana to Grey mana and the different types. Watch video 15 for damage from mana.
 	// Mana Defaults
 	CurrentMana = 100.f;
 	MaxMana = 100.f;
@@ -98,28 +99,28 @@ void UBaseStatsComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 	// Replicate to every client, no special condition required
 	// Health Replicated Varibles
-	DOREPLIFETIME(UBaseStatsComponent, CurrentHealth);
-	DOREPLIFETIME(UBaseStatsComponent, MaxHealth);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, CurrentHealth, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, MaxHealth, COND_OwnerOnly);
 
 	//Stamina Replicated Varibles
-	DOREPLIFETIME(UBaseStatsComponent, CurrentStamina);
-	DOREPLIFETIME(UBaseStatsComponent, MaxStamina);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, CurrentStamina, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, MaxStamina, COND_OwnerOnly);
 
 	//Mana Replicated Varibles
-	DOREPLIFETIME(UBaseStatsComponent, CurrentMana);
-	DOREPLIFETIME(UBaseStatsComponent, MaxMana);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, CurrentMana, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, MaxMana, COND_OwnerOnly);
 
 	// Base Stats Varibles
-	DOREPLIFETIME(UBaseStatsComponent, Strength);
-	DOREPLIFETIME(UBaseStatsComponent, Charm);
-	DOREPLIFETIME(UBaseStatsComponent, Perception);
-	DOREPLIFETIME(UBaseStatsComponent, Bravery);
-	DOREPLIFETIME(UBaseStatsComponent, Endurance);
-	DOREPLIFETIME(UBaseStatsComponent, Agility);
-	DOREPLIFETIME(UBaseStatsComponent, Stealth);
-	DOREPLIFETIME(UBaseStatsComponent, Intelligence);
-	DOREPLIFETIME(UBaseStatsComponent, Luck);
-	DOREPLIFETIME(UBaseStatsComponent, UnarmedCombat);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Strength, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Charm, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Perception, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Bravery, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Endurance, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Agility, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Stealth, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Intelligence, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, Luck, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UBaseStatsComponent, UnarmedCombat, COND_OwnerOnly);
 
 	// Collison Varibles
 	DOREPLIFETIME(UBaseStatsComponent, CollisonRadius);
@@ -389,15 +390,16 @@ void UBaseStatsComponent::DecreaseCurrentMana(float manaDecrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
-		if (CurrentMana <= 0)
+		CurrentMana -= manaDecrease;
+		if (CurrentMana < 0)
 		{
-			CurrentMana = 0.f;
-			UE_LOG(LogTemp, Warning, TEXT("No Mana"));
+			if (ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner()))
+			{
+				//TODO Change TakeDamage amount float the spell cost.
+				Character->TakeDamage(CurrentMana * -1, FDamageEvent(), Character->GetController(), Character);
+			}
 		}
-		else
-		{
-			CurrentMana -= manaDecrease;
-		}
+
 	}
 }
 
@@ -433,6 +435,7 @@ void UBaseStatsComponent::DecreaseMaxMana(float manaDecrease)
 	}
 	else if (GetOwnerRole() == ROLE_Authority)
 	{
+		//TODO Create Function in Current Mana used to many times from health to decrease Max Mana.
 		MaxMana -= manaDecrease;
 	}
 }

@@ -39,19 +39,24 @@ APickup::APickup()
 	AmountTime = 0.0f;
 	bIsPermanent = false;
 	Counter = 0.f;
+	bReplicates = true;
+	ObjectPickedup = false;
+	bReplicateMovement = true;
 }
 
 // Called when the game starts or when spawned
 void APickup::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (Role == ROLE_Authority)
-	{
-		SetReplicates(true);
-	}
-
 	
+}
+
+void APickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to every client, no special condition required
+	DOREPLIFETIME(APickup, ObjectPickedup);
 }
 
 void APickup::SetTimer()
@@ -448,6 +453,20 @@ void APickup::UseItem(ABaseCharacter* Player)
  }
 		}
 		Destroy();
+	}
+}
+
+void APickup::OnRep_Pickedup()
+{
+	this->MeshComp->SetHiddenInGame(ObjectPickedup);
+	this->SetActorEnableCollision(!ObjectPickedup);
+}
+void APickup::InInventory(bool In)
+{
+	if (Role == ROLE_Authority)
+	{
+		ObjectPickedup = In;
+		OnRep_Pickedup();
 	}
 }
 

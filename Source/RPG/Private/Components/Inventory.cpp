@@ -5,6 +5,8 @@
 
 #include "Net/UnrealNetwork.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/World.h"
+#include "Engine/Engine.h"
 
 #include "Interaction/Pickup.h"
 
@@ -29,15 +31,13 @@ void UInventory::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	// Replicate to every client, no special condition required
-	// Health Replicated Varibles
-	DOREPLIFETIME(UInventory, Items);
+	DOREPLIFETIME_CONDITION(UInventory, Items, COND_OwnerOnly);
 }
 
 bool UInventory::AddItem(APickup* Item)
 {
 	Items.Add(Item);
-	Item->SetActorHiddenInGame(true);
-	Multi_PickedupItem(Item);
+	Item->InInventory(true);
 
 	for (APickup* Pickup : Items)
 	{
@@ -46,16 +46,41 @@ bool UInventory::AddItem(APickup* Item)
 	return false;
 }
 
-bool UInventory::Multi_PickedupItem_Validate(APickup* Item)
+void UInventory::DropItem(APickup* Item)
 {
-	return true;
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		FVector Location = GetOwner()->GetActorLocation();
+		Location.X += FMath::RandRange(-50.0f, 100.0f);
+		Location.Y += FMath::RandRange(-50.0f, 100.0f);
+		FVector EndLocation = Location;
+		EndLocation.Z -= 500.0f;
+
+		FHitResult HitResult;
+		FCollisionObjectQueryParams ObjectParams;
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(GetOwner());
+
+		GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Location, EndLocation, ObjectParams, QueryParams);
+
+		if (HitResult.ImpactPoint != FVector::ZeroVector)
+		{
+			Location = HitResult.ImpactPoint;
+		}
+
+		Item->SetActorLocation(Location);
+		Item->InInventory(false);
+	}
 }
 
-void UInventory::Multi_PickedupItem_Implementation(APickup* Item)
+void UInventory::DropAllItems()
 {
-	Item->SetActorEnableCollision(false);
-}
-
-void UInventory::RemoveItem(APickup* Item)
-{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		for (APickup* Pickups : Items)
+		{
+			DropItem(Pickups);
+		}
+		Items.Empty();
+	}
 }

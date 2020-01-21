@@ -59,6 +59,7 @@ void AMainGameMode::Spawn(AController* Controller)
 		{
 			FTimerDelegate RespawnDelegate;
 			RespawnDelegate.BindUFunction(this, FName("Respawn"), Controller);
+			FTimerHandle RespawnHandle;
 			GetWorld()->GetTimerManager().SetTimer(RespawnHandle, RespawnDelegate, RespawnTimer, false);
 		}
 	}

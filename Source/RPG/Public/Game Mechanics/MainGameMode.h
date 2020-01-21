@@ -19,9 +19,7 @@ public:
 	AMainGameMode();
 
 protected:
-	
-	UPROPERTY()
-	FTimerHandle RespawnHandle;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timers")
 	float RespawnTimer;

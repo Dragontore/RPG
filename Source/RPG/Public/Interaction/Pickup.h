@@ -103,10 +103,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ENUMS")
 	EBaseStatType StatsType;
 
+	UPROPERTY(ReplicatedUsing = OnRep_Pickedup)
+	bool ObjectPickedup;
+
+	UFUNCTION()
+	void OnRep_Pickedup();
+
 public:	
 
 	UFUNCTION()
 	void UseItem(ABaseCharacter* Player);
+
+	UFUNCTION()
+	void InInventory(bool In);
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

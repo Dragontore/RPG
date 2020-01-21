@@ -473,6 +473,7 @@ void ABaseCharacter::Die()
 {
 	if (Role == ROLE_Authority)
 	{
+		Inventory->DropAllItems();
 		MultiDie();
 		AGameModeBase* BaseGameMode = GetWorld()->GetAuthGameMode();
 		if (AMainGameMode* GameMode = Cast<AMainGameMode>(BaseGameMode))

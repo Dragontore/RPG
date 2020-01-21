@@ -26,17 +26,15 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UFUNCTION(NetMulticast, Reliable, WithValidation)
-	void Multi_PickedupItem(APickup* Item);
-	bool Multi_PickedupItem_Validate(APickup* Item);
-	void Multi_PickedupItem_Implementation(APickup* Item);
-
 public:	
 
 	UFUNCTION()
 	bool AddItem(APickup* Item);
 
 	UFUNCTION()
-	void RemoveItem(APickup* Item);
+	void DropItem(APickup* Item);
+
+	UFUNCTION()
+	void DropAllItems();
 		
 };
