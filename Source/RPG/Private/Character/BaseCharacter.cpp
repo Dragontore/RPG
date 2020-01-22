@@ -72,6 +72,8 @@ ABaseCharacter::ABaseCharacter()
 	AttackOneLength = 5000.f;
 	// Default Die Timer
 	DestroyTime = 10.0f; //TODO Test for best destroy Time
+	//Default Inventory Slot Amouth
+	InventorySlotsAmout = 8;
 
 }
 
