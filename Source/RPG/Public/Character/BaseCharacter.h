@@ -25,7 +25,8 @@ class RPG_API ABaseCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
-public:
+public: //Blueprint Varibles
+
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
@@ -37,45 +38,55 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	float BaseLookUpRate;
 
-	// Sprint Functions
-	void StartSprinting();
-
-	void StopSprinting();
-
-	void ControlSprintingHandle();
-
-	// Jump Functions
-
-	void AttempJump();
-	float JumpCost;
-
+	//Added Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UBaseStatsComponent* BaseStatsComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UInventory* Inventory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+public: //Non Blueprint Functions
+
+		// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
+
+	// Sprint Functions
+	void StartSprinting();
+	void StopSprinting();
+	void ControlSprintingHandle();
+
+	// Jump Functions
+	void AttempJump();
+
+public: //Non Blueprint Varibles
+
+	//Jump Functions
+	float JumpCost;
+
+	UPROPERTY(Replicated)
 	int32 InventorySlotsAmout;
 
-protected:
+public:
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	int32 GetInventorySlotsAmout();
 
+protected: // Blueprint Functions
+
+		// Sprint Functions
+	UFUNCTION(BlueprintCallable, Category = "Sprint")
+	float GetSprintCost();
+
+	UFUNCTION(BlueprintCallable, Category = "Sprint")
+	void IncreaseSprintCost(float sprintCostIncrease);
+
+	UFUNCTION(BlueprintCallable, Category = "Sprint")
+	void DecreaseSprintCost(float sprintCostDecrease);
+
+	//Protected Added Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	ULineTrace* LineTraceComp;
-
-	//Sprint Varibles
-	//TODO possible add uproperty. 
-	UPROPERTY(Replicated)
-	bool bIsSprinting;
-	float SprintCost;
-	FTimerHandle SprintingHandle;
-	void HandleSprinting();
-	float SprintTime;
-
-	// Die Varibles
-	FTimerHandle DestroyHandle;
-	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Timers")
-	float DestroyTime;
 
 	//Function to display Health Bar
 	UFUNCTION(Blueprintpure, Category = "Stats")
@@ -89,15 +100,43 @@ protected:
 	UFUNCTION(Blueprintpure, Category = "Stats")
 	float ReturnPlayerMana();
 
+	//Inventory Functions
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	UInventory* GetInventoryComp();
+
+protected://Blueprint Varibles
+
+		// Die Varibles
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = "Timers")
+	float DestroyTime;
+
 	//Interact functions
-	void Interact();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interact")
 	float LineTraceLength;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interact")
 	float AttackOneLength;
 
-	//Base Attack TODO Action Bars
+protected: //Non Blueprint Varibles
 
+	//Sprint Varibles
+	//TODO possible add uproperty. 
+	UPROPERTY(Replicated)
+	bool bIsSprinting;
+	float SprintCost;
+	FTimerHandle SprintingHandle;
+	float SprintTime;
+
+	// Die Varibles
+	FTimerHandle DestroyHandle;
+
+protected:// Non Blueprint Functions
+
+	void HandleSprinting();
+
+	//Interact functions
+	void Interact();
+
+	//Base Attack TODO Action Bars
 	void AttackOne();
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -122,16 +161,6 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
-
-	// Sprint Functions
-	UFUNCTION(BlueprintCallable, Category = "Sprint")
-	float GetSprintCost();
-
-	UFUNCTION(BlueprintCallable, Category = "Sprint")
-	void IncreaseSprintCost(float sprintCostIncrease);
-
-	UFUNCTION(BlueprintCallable, Category = "Sprint")
-	void DecreaseSprintCost(float sprintCostDecrease);
 
 	//Sprint Server Functions
 
@@ -185,13 +214,6 @@ protected:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
-
 
 public:
 

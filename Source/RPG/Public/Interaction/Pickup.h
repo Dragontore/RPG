@@ -10,6 +10,7 @@ class UStaticMeshComponent;
 class USphereComponent;
 class ABaseCharacter;
 class UInteractableInfoComponent;
+class UTexture2D;
 
 // add struct for default value
 
@@ -71,16 +72,6 @@ public:
 
 protected: 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float IncreaseAmount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	bool bIsPermanent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AmountTime;
-
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -94,6 +85,9 @@ protected:
 	void UndoStatTimer();
 	float Counter;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base Info")
+	UTexture2D* Thumbnail;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ENUMS")
 	EPickupType PickupType;
 
@@ -105,6 +99,18 @@ protected:
 
 	UPROPERTY(ReplicatedUsing = OnRep_Pickedup)
 	bool ObjectPickedup;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float IncreaseAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	bool bIsPermanent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float AmountTime;
+
+protected:
+
 
 	UFUNCTION()
 	void OnRep_Pickedup();

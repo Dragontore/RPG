@@ -13,21 +13,17 @@ class RPG_API UInventory : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:	// Non Blueprint Varible
+
 	// Sets default values for this component's properties
 	UInventory();
-
-protected:
 
 	UPROPERTY(Replicated)
 	TArray<APickup*> Items;
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+public:	// Blueprint Varible
 
-public:	
-
+public: // Non Blueprint Functions
 	UFUNCTION()
 	bool AddItem(APickup* Item);
 
@@ -36,5 +32,24 @@ public:
 
 	UFUNCTION()
 	void DropAllItems();
+
+public: // Blueprint Functions
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	TArray<APickup*> GetInventoryItem();
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	int32 GetInventoryCount();
+
+protected: //Non Blueprint Varibles
+
+protected: // Blueprint Varibles
+
+protected: // Non Blueprint Function
+
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+protected: // Blueprint Function
 		
 };

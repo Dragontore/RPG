@@ -13,7 +13,7 @@
 // Sets default values for this component's properties
 UInventory::UInventory()
 {
-	
+	bReplicates = true;
 }
 
 
@@ -83,4 +83,14 @@ void UInventory::DropAllItems()
 		}
 		Items.Empty();
 	}
+}
+
+TArray<APickup*> UInventory::GetInventoryItem()
+{
+	return Items;
+}
+
+int32 UInventory::GetInventoryCount()
+{
+	return Items.Num() -1;
 }

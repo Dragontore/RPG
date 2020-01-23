@@ -10,6 +10,7 @@
 #include "Engine/Engine.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/Texture2D.h"
 
 #include "Character/BaseCharacter.h"
 #include "Components/BaseStatsComponent.h"
@@ -26,10 +27,11 @@ APickup::APickup()
 	CollisonSphere = CreateDefaultSubobject<USphereComponent>("Collision Sphere");
 	CollisonSphere->SetupAttachment(MeshComp);
 	CollisonSphere->SetSphereRadius(SphereRadius);
-
 	CollisonSphere->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnOverlapBegin);
 
 	InteractableInfo = CreateDefaultSubobject<UInteractableInfoComponent>(TEXT("Interactable Info"));
+
+	Thumbnail = CreateDefaultSubobject<UTexture2D>(TEXT("Thumbnail"));
 
 	PickupType = EPickupType::PT_None;
 	CoinType = ECoinType::CT_None;

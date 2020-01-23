@@ -82,7 +82,6 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 	ControlSprintingHandle();
 }
 
@@ -93,6 +92,7 @@ void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// Replicate to every client, no special condition required
 	//Replicated Varibles
 	DOREPLIFETIME(ABaseCharacter, bIsSprinting);
+	DOREPLIFETIME(ABaseCharacter, InventorySlotsAmout);
 }
 
 // Called every frame
@@ -179,6 +179,10 @@ void ABaseCharacter::MoveRight(float Value)
 	}
 }
 
+//Custom Functions
+
+//Sprint Function
+
 void ABaseCharacter::StartSprinting()
 {
 	float CurrentStamina = BaseStatsComp->GetCurrentStamina();
@@ -241,6 +245,10 @@ void ABaseCharacter::HandleSprinting()
 			BaseStatsComp->DecreaseCurrentStamina(SprintCost);
 		}
 	}
+}
+int32 ABaseCharacter::GetInventorySlotsAmout()
+{
+	return InventorySlotsAmout;
 }
 float ABaseCharacter::GetSprintCost()
 {
@@ -349,6 +357,8 @@ void ABaseCharacter::ServerHandleSprinting_Implementation()
 	}
 }
 
+//Jump Function
+
 void ABaseCharacter::AttempJump()
 {
 	if (BaseStatsComp->GetCurrentStamina() > JumpCost && !GetMovementComponent()->IsFalling())
@@ -358,6 +368,8 @@ void ABaseCharacter::AttempJump()
 		BaseStatsComp->DecreaseCurrentStamina(JumpCost);
 	}
 }
+
+//Interact Function
 
 void ABaseCharacter::Interact()
 {
@@ -393,7 +405,10 @@ void ABaseCharacter::ServerInteract_Implementation()
 		{
 			if (APickup* Pickup = Cast<APickup>(Actor))
 			{
-				Inventory->AddItem(Pickup);
+				if (Inventory->GetInventoryCount() < InventorySlotsAmout)
+				{
+					Inventory->AddItem(Pickup);
+				}
 			}
 			else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
 			{
@@ -402,6 +417,8 @@ void ABaseCharacter::ServerInteract_Implementation()
 		}
 	}
 }
+
+//Attack Function
 
 void ABaseCharacter::AttackOne()
 {
@@ -439,6 +456,8 @@ void ABaseCharacter::ServerAttackOne_Implementation()
 		}
 	}
 }
+
+//Damage Functions
 
 float ABaseCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -503,6 +522,8 @@ void ABaseCharacter::MultiDie_Implementation()
 	this->GetMesh()->SetAllBodiesSimulatePhysics(true);
 }
 
+//Getters
+
 float ABaseCharacter::ReturnPlayersHealth()
 {
 	float RetCurrentHealth = BaseStatsComp->GetCurrentHealth();
@@ -529,4 +550,9 @@ float ABaseCharacter::ReturnPlayerMana()
 	float RetMana = RetCurrentMana / RetMaxMana;
 
 	return RetMana;
+}
+
+UInventory* ABaseCharacter::GetInventoryComp()
+{
+	return Inventory;
 }
