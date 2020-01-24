@@ -70,16 +70,20 @@ bool UInventory::CheckIfClientHasItem(APickup* Item)
 
 bool UInventory::RemoveItemFromInventory(APickup* Item)
 {
-	int32 Counter = 0;
-	
-	for (APickup* Pickups : Items)
+	if (GetOwnerRole() == ROLE_Authority)
 	{
-		if (Pickups == Item)
+		int32 Counter = 0;
+
+		for (APickup* Pickups : Items)
 		{
-			Items.RemoveAt(Counter);
-			return true;
+			if (Pickups == Item)
+			{
+				Items.RemoveAt(Counter);
+				return true;
+			}
+			++Counter;
 		}
-		++Counter;
+		return false;
 	}
 	return false;
 }
