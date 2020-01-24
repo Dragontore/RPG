@@ -14,6 +14,9 @@
 UInventory::UInventory()
 {
 	bReplicates = true;
+
+	//Default Inventory Slot Amouth
+	InventorySlotsAmout = 8;
 }
 
 
@@ -32,6 +35,7 @@ void UInventory::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 
 	// Replicate to every client, no special condition required
 	DOREPLIFETIME_CONDITION(UInventory, Items, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UInventory, InventorySlotsAmout, COND_OwnerOnly);
 }
 
 bool UInventory::AddItem(APickup* Item)
@@ -47,6 +51,45 @@ bool UInventory::AddItem(APickup* Item)
 }
 
 void UInventory::DropItem(APickup* Item)
+{
+	
+	ServerDropItem(Item);
+}
+
+bool UInventory::CheckIfClientHasItem(APickup* Item)
+{
+	for (APickup* Pickups : Items)
+	{
+		if (Pickups == Item)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UInventory::RemoveItemFromInventory(APickup* Item)
+{
+	int32 Counter = 0;
+	
+	for (APickup* Pickups : Items)
+	{
+		if (Pickups == Item)
+		{
+			Items.RemoveAt(Counter);
+			return true;
+		}
+		++Counter;
+	}
+	return false;
+}
+
+bool UInventory::ServerDropItem_Validate(APickup* Item)
+{
+	return CheckIfClientHasItem(Item);
+}
+
+void UInventory::ServerDropItem_Implementation(APickup* Item)
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -65,11 +108,13 @@ void UInventory::DropItem(APickup* Item)
 
 		if (HitResult.ImpactPoint != FVector::ZeroVector)
 		{
-			Location = HitResult.ImpactPoint;
+			Location = HitResult.ImpactPoint +15.f;
 		}
 
 		Item->SetActorLocation(Location);
 		Item->InInventory(false);
+
+		RemoveItemFromInventory(Item);
 	}
 }
 
@@ -93,4 +138,60 @@ TArray<APickup*> UInventory::GetInventoryItem()
 int32 UInventory::GetInventoryCount()
 {
 	return Items.Num() -1;
+}
+
+int32 UInventory::GetInventorySlotsAmout()
+{
+	return InventorySlotsAmout;
+}
+
+void UInventory::IncreaseInventorySlotAmout(int32 Amount)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerIncreaseInventorySlotsAmout(Amount);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		InventorySlotsAmout += Amount;
+	}
+}
+
+void UInventory::DecreaseInventorySlotAmout(int32 Amount)
+{
+	if (GetOwnerRole() < ROLE_Authority)
+	{
+		ServerDecreaseInventorySlotsAmout(Amount);
+	}
+	else if (GetOwnerRole() == ROLE_Authority)
+	{
+		InventorySlotsAmout -= Amount;
+	}
+}
+
+bool UInventory::ServerIncreaseInventorySlotsAmout_Validate(int32 Amount)
+{
+	return true;
+}
+
+void UInventory::ServerIncreaseInventorySlotsAmout_Implementation(int32 Amount)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		IncreaseInventorySlotAmout(Amount);
+	}
+
+}
+
+bool UInventory::ServerDecreaseInventorySlotsAmout_Validate(int32 Amount)
+{
+	return true;
+}
+
+void UInventory::ServerDecreaseInventorySlotsAmout_Implementation(int32 Amount)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		DecreaseInventorySlotAmout(Amount);
+	}
 }

@@ -65,12 +65,8 @@ public: //Non Blueprint Varibles
 	//Jump Functions
 	float JumpCost;
 
-	UPROPERTY(Replicated)
-	int32 InventorySlotsAmout;
-
 public:
-	UFUNCTION(BlueprintCallable, Category = "Getter")
-	int32 GetInventorySlotsAmout();
+
 
 protected: // Blueprint Functions
 

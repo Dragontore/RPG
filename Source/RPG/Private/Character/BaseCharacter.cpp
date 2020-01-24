@@ -72,8 +72,6 @@ ABaseCharacter::ABaseCharacter()
 	AttackOneLength = 5000.f;
 	// Default Die Timer
 	DestroyTime = 10.0f; //TODO Test for best destroy Time
-	//Default Inventory Slot Amouth
-	InventorySlotsAmout = 8;
 
 }
 
@@ -92,7 +90,6 @@ void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// Replicate to every client, no special condition required
 	//Replicated Varibles
 	DOREPLIFETIME(ABaseCharacter, bIsSprinting);
-	DOREPLIFETIME(ABaseCharacter, InventorySlotsAmout);
 }
 
 // Called every frame
@@ -246,10 +243,7 @@ void ABaseCharacter::HandleSprinting()
 		}
 	}
 }
-int32 ABaseCharacter::GetInventorySlotsAmout()
-{
-	return InventorySlotsAmout;
-}
+
 float ABaseCharacter::GetSprintCost()
 {
 	return SprintCost;
@@ -405,7 +399,7 @@ void ABaseCharacter::ServerInteract_Implementation()
 		{
 			if (APickup* Pickup = Cast<APickup>(Actor))
 			{
-				if (Inventory->GetInventoryCount() < InventorySlotsAmout)
+				if (Inventory->GetInventoryCount() < Inventory->GetInventorySlotsAmout())
 				{
 					Inventory->AddItem(Pickup);
 				}

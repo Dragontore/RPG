@@ -28,9 +28,6 @@ public: // Non Blueprint Functions
 	bool AddItem(APickup* Item);
 
 	UFUNCTION()
-	void DropItem(APickup* Item);
-
-	UFUNCTION()
 	void DropAllItems();
 
 public: // Blueprint Functions
@@ -41,14 +38,49 @@ public: // Blueprint Functions
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	int32 GetInventoryCount();
 
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+	int32 GetInventorySlotsAmout();
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void IncreaseInventorySlotAmout(int32 Amount);
+
+	UFUNCTION(BlueprintCallable, Category = "Setter")
+	void DecreaseInventorySlotAmout(int32 Amount);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void DropItem(APickup* Item);
+
 protected: //Non Blueprint Varibles
+
+	UPROPERTY(Replicated)
+	int32 InventorySlotsAmout;
 
 protected: // Blueprint Varibles
 
-protected: // Non Blueprint Function
+protected: 
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+protected: // Non Blueprint Function
+
+	bool CheckIfClientHasItem(APickup* Item);
+	bool RemoveItemFromInventory(APickup* Item);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerIncreaseInventorySlotsAmout(int32 Amount);
+	bool ServerIncreaseInventorySlotsAmout_Validate(int32 Amount);
+	void ServerIncreaseInventorySlotsAmout_Implementation(int32 Amount);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDecreaseInventorySlotsAmout(int32 Amount);
+	bool ServerDecreaseInventorySlotsAmout_Validate(int32 Amount);
+	void ServerDecreaseInventorySlotsAmout_Implementation(int32 Amount);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDropItem(APickup* Item);
+	bool ServerDropItem_Validate(APickup* Item);
+	void ServerDropItem_Implementation(APickup* Item);
 
 protected: // Blueprint Function
 		
