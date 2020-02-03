@@ -195,6 +195,7 @@ void APickup::HandleStatTimer()
 			UndoStatTimer();
 			}
 		}
+		return;
 	}
 }
 
@@ -455,6 +456,7 @@ void APickup::UseItem(ABaseCharacter* Player)
  }
 		}
 		Destroy();
+		return;
 	}
 }
 

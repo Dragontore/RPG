@@ -9,6 +9,7 @@
 #include "Engine/Engine.h"
 
 #include "Interaction/Pickup.h"
+#include "Character/BaseCharacter.h"
 
 // Sets default values for this component's properties
 UInventory::UInventory()
@@ -54,6 +55,12 @@ void UInventory::DropItem(APickup* Item)
 {
 	
 	ServerDropItem(Item);
+}
+
+void UInventory::UseItem(APickup* Item)
+{
+
+	ServerUseItem(Item);
 }
 
 bool UInventory::CheckIfClientHasItem(APickup* Item)
@@ -119,6 +126,23 @@ void UInventory::ServerDropItem_Implementation(APickup* Item)
 		Item->InInventory(false);
 
 		RemoveItemFromInventory(Item);
+	}
+}
+
+bool UInventory::ServerUseItem_Validate(APickup* Item)
+{
+	return CheckIfClientHasItem(Item);
+}
+
+void UInventory::ServerUseItem_Implementation(APickup* Item)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		if (ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner()))
+		{
+			Item->UseItem(Character);
+			RemoveItemFromInventory(Item);
+		}
 	}
 }
 

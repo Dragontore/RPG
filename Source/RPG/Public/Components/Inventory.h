@@ -50,6 +50,9 @@ public: // Blueprint Functions
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void DropItem(APickup* Item);
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void UseItem(APickup* Item);
+
 protected: //Non Blueprint Varibles
 
 	UPROPERTY(Replicated)
@@ -81,6 +84,11 @@ protected: // Non Blueprint Function
 	void ServerDropItem(APickup* Item);
 	bool ServerDropItem_Validate(APickup* Item);
 	void ServerDropItem_Implementation(APickup* Item);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerUseItem(APickup* Item);
+	bool ServerUseItem_Validate(APickup* Item);
+	void ServerUseItem_Implementation(APickup* Item);
 
 protected: // Blueprint Function
 		
