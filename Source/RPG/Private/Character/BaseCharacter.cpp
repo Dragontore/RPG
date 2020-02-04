@@ -21,6 +21,7 @@
 #include "Interaction/Interactable.h"
 #include "Game Mechanics/MainGameMode.h"
 #include "Components/Inventory.h"
+#include "Interaction/BaseContainer.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -380,6 +381,18 @@ void ABaseCharacter::Interact()
 		{
 			ServerInteract();
 		}
+		else if (ABaseContainer* Container = Cast<ABaseContainer>(Actor))
+		{
+			ServerInteract();
+			if (UInventory* ContainerInventory = Container->GetInventoryComponent())
+			{
+				TArray<APickup*> ContainerItems = ContainerInventory->GetInventoryItem();
+				for (APickup* Pickup : ContainerItems)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Function Call"));
+				}
+			}
+		}
 	}
 }
 
@@ -407,6 +420,10 @@ void ABaseCharacter::ServerInteract_Implementation()
 			else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
 			{
 				Interactable->Interact(this);
+			}
+			else if (ABaseContainer* Container = Cast<ABaseContainer>(Actor))
+			{
+				Container->Interact(this);
 			}
 		}
 	}
