@@ -170,7 +170,7 @@ int32 UInventory::GetInventoryCount()
 
 int32 UInventory::GetInventorySlotsAmout()
 {
-	return InventorySlotsAmout;
+	return InventorySlotsAmout - 1;
 }
 
 void UInventory::IncreaseInventorySlotAmout(int32 Amount)
