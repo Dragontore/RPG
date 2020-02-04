@@ -14,6 +14,8 @@
 #include "TimerManager.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Blueprint/UserWidget.h"
 
 #include "Components/BaseStatsComponent.h"
 #include "Components/LineTrace.h"
@@ -58,6 +60,12 @@ ABaseCharacter::ABaseCharacter()
 	BaseStatsComp = CreateDefaultSubobject<UBaseStatsComponent>(TEXT("Base Stats Component"));
 	LineTraceComp = CreateDefaultSubobject<ULineTrace>(TEXT("Line Trace Component"));
 	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory Component"));
+	
+	static ConstructorHelpers::FClassFinder<UUserWidget> InventoryRef(TEXT("/Game/UI/Inventory/UI_Inventory"));
+	if (InventoryRef.Class)
+	{
+		InventoryWidgetClass = InventoryRef.Class;
+	}
 
 	//Default for Sprinting
 	bIsSprinting = false;
@@ -118,6 +126,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	//Custome Input Bindings
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &ABaseCharacter::Interact);
+	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ABaseCharacter::OpenCloseInventory);
 	//Custome Input Attack Bindings
 	PlayerInputComponent->BindAction("Attack One", IE_Pressed, this, &ABaseCharacter::AttackOne);
 
@@ -362,6 +371,35 @@ void ABaseCharacter::AttempJump()
 		StopSprinting();
 		BaseStatsComp->DecreaseCurrentStamina(JumpCost);
 	}
+}
+
+//Inventory Functions
+
+void ABaseCharacter::OpenCloseInventory()
+{
+	if (InventoryWidget && InventoryWidget->IsInViewport())
+	{
+		InventoryWidget->RemoveFromViewport();
+		if (APlayerController* PController = GetController()->CastToPlayerController())
+		{
+			PController->bShowMouseCursor = false;
+			PController->SetInputMode(FInputModeGameOnly());
+		}
+	}
+	else
+	{
+		InventoryWidget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
+		if (InventoryWidget)
+		{
+			InventoryWidget->AddToViewport();
+			if (APlayerController* PController = GetController()->CastToPlayerController())
+			{
+				PController->bShowMouseCursor = true;
+				PController->SetInputMode(FInputModeGameAndUI());
+			}
+		}
+	}
+
 }
 
 //Interact Function

@@ -11,6 +11,7 @@ class UCameraComponent;
 class UBaseStatsComponent;
 class ULineTrace;
 class UInventory;
+class UUserWidget;
 
 UCLASS()
 class RPG_API ABaseCharacter : public ACharacter
@@ -44,6 +45,10 @@ public: //Blueprint Varibles
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UInventory* Inventory;
+	
+	TSubclassOf<UUserWidget> InventoryWidgetClass;
+
+	UUserWidget* InventoryWidget;
 
 public: //Non Blueprint Functions
 
@@ -131,6 +136,8 @@ protected:// Non Blueprint Functions
 
 	//Interact functions
 	void Interact();
+
+	void OpenCloseInventory();
 
 	//Base Attack TODO Action Bars
 	void AttackOne();
