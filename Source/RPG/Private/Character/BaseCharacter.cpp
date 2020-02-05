@@ -61,11 +61,11 @@ ABaseCharacter::ABaseCharacter()
 	LineTraceComp = CreateDefaultSubobject<ULineTrace>(TEXT("Line Trace Component"));
 	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory Component"));
 	
-	static ConstructorHelpers::FClassFinder<UUserWidget> InventoryRef(TEXT("/Game/UI/Inventory/UI_Inventory"));
-	if (InventoryRef.Class)
-	{
-		InventoryWidgetClass = InventoryRef.Class;
-	}
+	//static ConstructorHelpers::FClassFinder<UUserWidget> InventoryRef(TEXT("/Game/UI/Inventory/UI_Inventory"));
+	//if (InventoryRef.Class)
+	//{
+	//	InventoryWidgetClass = InventoryRef.Class;
+	//}
 
 	//Default for Sprinting
 	bIsSprinting = false;
