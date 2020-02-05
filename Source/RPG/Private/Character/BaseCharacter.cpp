@@ -126,7 +126,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	//Custome Input Bindings
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &ABaseCharacter::Interact);
-	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ABaseCharacter::OpenCloseInventory);
+	//PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ABaseCharacter::OpenCloseInventory);
 	//Custome Input Attack Bindings
 	PlayerInputComponent->BindAction("Attack One", IE_Pressed, this, &ABaseCharacter::AttackOne);
 
@@ -375,32 +375,31 @@ void ABaseCharacter::AttempJump()
 
 //Inventory Functions
 
-void ABaseCharacter::OpenCloseInventory()
-{
-	if (InventoryWidget && InventoryWidget->IsInViewport())
-	{
-		InventoryWidget->RemoveFromViewport();
-		if (APlayerController* PController = GetController()->CastToPlayerController())
-		{
-			PController->bShowMouseCursor = false;
-			PController->SetInputMode(FInputModeGameOnly());
-		}
-	}
-	else
-	{
-		InventoryWidget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
-		if (InventoryWidget)
-		{
-			InventoryWidget->AddToViewport();
-			if (APlayerController* PController = GetController()->CastToPlayerController())
-			{
-				PController->bShowMouseCursor = true;
-				PController->SetInputMode(FInputModeGameAndUI());
-			}
-		}
-	}
-
-}
+//void ABaseCharacter::OpenCloseInventory()
+//{
+//	if (InventoryWidget && InventoryWidget->IsInViewport())
+//	{
+//		InventoryWidget->RemoveFromViewport();
+//		if (APlayerController* PController = GetController()->CastToPlayerController())
+//		{
+//			PController->bShowMouseCursor = false;
+//			PController->SetInputMode(FInputModeGameOnly());
+//		}
+//	}
+//	else
+//	{
+//		InventoryWidget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
+//		if (InventoryWidget)
+//		{
+//			InventoryWidget->AddToViewport();
+//			if (APlayerController* PController = GetController()->CastToPlayerController())
+//			{
+//				PController->bShowMouseCursor = true;
+//				PController->SetInputMode(FInputModeGameAndUI());
+//			}
+//		}
+//	}
+//}
 
 //Interact Function
 

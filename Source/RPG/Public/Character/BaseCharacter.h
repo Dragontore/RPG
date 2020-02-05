@@ -46,9 +46,9 @@ public: //Blueprint Varibles
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UInventory* Inventory;
 	
-	TSubclassOf<UUserWidget> InventoryWidgetClass;
+	//TSubclassOf<UUserWidget> InventoryWidgetClass;
 
-	UUserWidget* InventoryWidget;
+	//UUserWidget* InventoryWidget;
 
 public: //Non Blueprint Functions
 
@@ -137,7 +137,7 @@ protected:// Non Blueprint Functions
 	//Interact functions
 	void Interact();
 
-	void OpenCloseInventory();
+	//void OpenCloseInventory();
 
 	//Base Attack TODO Action Bars
 	void AttackOne();
