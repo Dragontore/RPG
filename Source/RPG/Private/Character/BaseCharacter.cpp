@@ -25,6 +25,9 @@
 #include "Components/Inventory.h"
 #include "Interaction/BaseContainer.h"
 
+#include "Interaction/BasePickup.h"
+#include "Interaction/BaseInteractable.h"
+
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
@@ -410,21 +413,21 @@ void ABaseCharacter::Interact()
 	FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
 	if (AActor* Actor = HitResult.GetActor())
 	{
-		if (APickup* Pickup = Cast<APickup>(Actor))
+		if (ABasePickup* Pickup = Cast<ABasePickup>(Actor))
 		{
 			ServerInteract();
 		}
-		else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
+		else if (ABaseInteractable* Interactable = Cast<ABaseInteractable>(Actor))
 		{
 			ServerInteract();
 		}
-		else if (ABaseContainer* Container = Cast<ABaseContainer>(Actor))
+		else if (ABaseContainer* Container = Cast<ABaseContainer>(Actor))// TODO Change code
 		{
 			ServerInteract();
 			if (UInventory* ContainerInventory = Container->GetInventoryComponent())
 			{
-				TArray<APickup*> ContainerItems = ContainerInventory->GetInventoryItem();
-				for (APickup* Pickup : ContainerItems)
+				TArray<ABasePickup*> ContainerItems = ContainerInventory->GetInventoryItem();
+				for (ABasePickup* Pickup : ContainerItems)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("Function Call"));
 				}
@@ -447,14 +450,14 @@ void ABaseCharacter::ServerInteract_Implementation()
 		FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
 		if (AActor* Actor = HitResult.GetActor())
 		{
-			if (APickup* Pickup = Cast<APickup>(Actor))
+			if (ABasePickup* Pickup = Cast<ABasePickup>(Actor))
 			{
 				if (Inventory->GetInventoryCount() < Inventory->GetInventorySlotsAmout())
 				{
 					Inventory->AddItem(Pickup);
 				}
 			}
-			else if (AInteractable* Interactable = Cast<AInteractable>(Actor))
+			else if (ABaseInteractable* Interactable = Cast<ABaseInteractable>(Actor))
 			{
 				Interactable->Interact(this);
 			}

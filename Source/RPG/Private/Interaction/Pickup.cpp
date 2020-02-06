@@ -462,6 +462,7 @@ void APickup::UseItem(ABaseCharacter* Player)
 
 void APickup::OnRep_Pickedup()
 {
+
 	this->MeshComp->SetHiddenInGame(ObjectPickedup);
 	this->SetActorEnableCollision(!ObjectPickedup);
 }

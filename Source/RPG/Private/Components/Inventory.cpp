@@ -8,7 +8,7 @@
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 
-#include "Interaction/Pickup.h"
+#include "Interaction/BasePickup.h"
 #include "Character/BaseCharacter.h"
 
 // Sets default values for this component's properties
@@ -39,33 +39,33 @@ void UInventory::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME_CONDITION(UInventory, InventorySlotsAmout, COND_OwnerOnly);
 }
 
-bool UInventory::AddItem(APickup* Item)
+bool UInventory::AddItem(ABasePickup* Item)
 {
 	Items.Add(Item);
 	Item->InInventory(true);
 
-	for (APickup* Pickup : Items)
+	for (ABasePickup* Pickup : Items)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Item: %s"), *Pickup->GetName());
 	}
 	return false;
 }
 
-void UInventory::DropItem(APickup* Item)
+void UInventory::DropItem(ABasePickup* Item)
 {
 	
 	ServerDropItem(Item);
 }
 
-void UInventory::UseItem(APickup* Item)
+void UInventory::UseItem(ABasePickup* Item)
 {
 
 	ServerUseItem(Item);
 }
 
-bool UInventory::CheckIfClientHasItem(APickup* Item)
+bool UInventory::CheckIfClientHasItem(ABasePickup* Item)
 {
-	for (APickup* Pickups : Items)
+	for (ABasePickup* Pickups : Items)
 	{
 		if (Pickups == Item)
 		{
@@ -75,13 +75,13 @@ bool UInventory::CheckIfClientHasItem(APickup* Item)
 	return false;
 }
 
-bool UInventory::RemoveItemFromInventory(APickup* Item)
+bool UInventory::RemoveItemFromInventory(ABasePickup* Item)
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
 		int32 Counter = 0;
 
-		for (APickup* Pickups : Items)
+		for (ABasePickup* Pickups : Items)
 		{
 			if (Pickups == Item)
 			{
@@ -95,12 +95,12 @@ bool UInventory::RemoveItemFromInventory(APickup* Item)
 	return false;
 }
 
-bool UInventory::ServerDropItem_Validate(APickup* Item)
+bool UInventory::ServerDropItem_Validate(ABasePickup* Item)
 {
 	return CheckIfClientHasItem(Item);
 }
 
-void UInventory::ServerDropItem_Implementation(APickup* Item)
+void UInventory::ServerDropItem_Implementation(ABasePickup* Item)
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -129,12 +129,12 @@ void UInventory::ServerDropItem_Implementation(APickup* Item)
 	}
 }
 
-bool UInventory::ServerUseItem_Validate(APickup* Item)
+bool UInventory::ServerUseItem_Validate(ABasePickup* Item)
 {
 	return CheckIfClientHasItem(Item);
 }
 
-void UInventory::ServerUseItem_Implementation(APickup* Item)
+void UInventory::ServerUseItem_Implementation(ABasePickup* Item)
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
@@ -150,7 +150,7 @@ void UInventory::DropAllItems()
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
-		for (APickup* Pickups : Items)
+		for (ABasePickup* Pickups : Items)
 		{
 			DropItem(Pickups);
 		}
@@ -158,7 +158,7 @@ void UInventory::DropAllItems()
 	}
 }
 
-TArray<APickup*> UInventory::GetInventoryItem()
+TArray<ABasePickup*> UInventory::GetInventoryItem()
 {
 	return Items;
 }

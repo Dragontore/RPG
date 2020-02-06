@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Inventory.generated.h"
 
-class APickup;
+class ABasePickup;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPG_API UInventory : public UActorComponent
@@ -19,13 +19,13 @@ public:	// Non Blueprint Varible
 	UInventory();
 
 	UPROPERTY(Replicated)
-	TArray<APickup*> Items;
+		TArray<ABasePickup*> Items;
 
 public:	// Blueprint Varible
 
 public: // Non Blueprint Functions
 	UFUNCTION()
-	bool AddItem(APickup* Item);
+	bool AddItem(ABasePickup* Item);
 
 	UFUNCTION()
 	void DropAllItems();
@@ -33,7 +33,7 @@ public: // Non Blueprint Functions
 public: // Blueprint Functions
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
-	TArray<APickup*> GetInventoryItem();
+	TArray<ABasePickup*> GetInventoryItem();
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 	int32 GetInventoryCount();
@@ -48,10 +48,10 @@ public: // Blueprint Functions
 	void DecreaseInventorySlotAmout(int32 Amount);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void DropItem(APickup* Item);
+	void DropItem(ABasePickup* Item);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void UseItem(APickup* Item);
+	void UseItem(ABasePickup* Item);
 
 protected: //Non Blueprint Varibles
 
@@ -67,8 +67,8 @@ protected:
 
 protected: // Non Blueprint Function
 
-	bool CheckIfClientHasItem(APickup* Item);
-	bool RemoveItemFromInventory(APickup* Item);
+	bool CheckIfClientHasItem(ABasePickup* Item);
+	bool RemoveItemFromInventory(ABasePickup* Item);
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerIncreaseInventorySlotsAmout(int32 Amount);
@@ -81,14 +81,14 @@ protected: // Non Blueprint Function
 	void ServerDecreaseInventorySlotsAmout_Implementation(int32 Amount);
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerDropItem(APickup* Item);
-	bool ServerDropItem_Validate(APickup* Item);
-	void ServerDropItem_Implementation(APickup* Item);
+	void ServerDropItem(ABasePickup* Item);
+	bool ServerDropItem_Validate(ABasePickup* Item);
+	void ServerDropItem_Implementation(ABasePickup* Item);
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerUseItem(APickup* Item);
-	bool ServerUseItem_Validate(APickup* Item);
-	void ServerUseItem_Implementation(APickup* Item);
+	void ServerUseItem(ABasePickup* Item);
+	bool ServerUseItem_Validate(ABasePickup* Item);
+	void ServerUseItem_Implementation(ABasePickup* Item);
 
 protected: // Blueprint Function
 		
