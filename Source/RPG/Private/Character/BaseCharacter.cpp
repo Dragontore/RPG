@@ -19,8 +19,6 @@
 
 #include "Components/BaseStatsComponent.h"
 #include "Components/LineTrace.h"
-#include "Interaction/Pickup.h"
-#include "Interaction/Interactable.h"
 #include "Game Mechanics/MainGameMode.h"
 #include "Components/Inventory.h"
 #include "Interaction/BaseContainer.h"
