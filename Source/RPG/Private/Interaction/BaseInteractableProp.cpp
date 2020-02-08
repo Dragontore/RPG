@@ -3,9 +3,12 @@
 
 #include "BaseInteractableProp.h"
 
+#include "Components/StaticMeshComponent.h"
+
 
 
 ABaseInteractableProp::ABaseInteractableProp()
 {
 	PropMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("Prop Mesh");
+	PropMeshComp->SetupAttachment(RootComponent);
 }
