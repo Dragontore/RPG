@@ -74,5 +74,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UInteractableInfoComponent* InteractableInfo;
 
+	UPROPERTY(Replicated)
+		float Durability;
+
 
 };

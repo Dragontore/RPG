@@ -8,16 +8,7 @@
 
 class UTexture2D;
 
-UENUM(BlueprintType)
-enum class EPickupType1 : uint8
-{
-	PT_None				UMETA(DisplayName = "None"),
-	PT_Health			UMETA(DisplayName = "Health"),
-	PT_Stamina			UMETA(DisplayName = "Stamina"),
-	PT_Mana				UMETA(DisplayName = "Mana"),
-	PT_Money			UMETA(DisplayName = "Money"),
-	PT_Stats			UMETA(DisplayName = "Stats")
-};
+
 UENUM(BlueprintType)
 enum class ECoinType1 : uint8
 {
@@ -25,22 +16,6 @@ enum class ECoinType1 : uint8
 	CT_Bronze		UMETA(DisplayName = "Bronze Coin"),
 	CT_Silver		UMETA(DisplayName = "Silver Coin"),
 	CT_Gold			UMETA(DisplayName = "Gold Coin")
-};
-
-UENUM(BlueprintType)
-enum class EBaseStatType1 : uint8
-{
-	BT_None				UMETA(DisplayName = "None"),
-	BT_Strength			UMETA(DisplayName = "Strength"),
-	BT_Charm			UMETA(DisplayName = "Charm"),
-	BT_Perception		UMETA(DisplayName = "Perception"),
-	BT_Bravery			UMETA(DisplayName = "Bravery"),
-	BT_Endurance		UMETA(DisplayName = "Endurance"),
-	BT_Agility			UMETA(DisplayName = "Agility"),
-	BT_Stealth			UMETA(DisplayName = "Stealth"),
-	BT_Intelligence		UMETA(DisplayName = "Intelligence"),
-	BT_Luck				UMETA(DisplayName = "Luck"),
-	BT_UnarmedCombat	UMETA(DisplayName = "Unarmed Combat")
 };
 
 /**
@@ -51,8 +26,7 @@ class RPG_API ABasePickup : public ABaseInteractable
 {
 	GENERATED_BODY()
 
-		// Sets default values for this actor's properties
-		ABasePickup();
+
 
 public:
 			//Non Blueprint Public Variblies
@@ -61,7 +35,7 @@ public:
 			//Non Blueprint Public Functions
 
 	UFUNCTION()
-	void UseItem(ABaseCharacter* Player);
+	virtual void UseItem(ABaseCharacter* Player);
 
 	UFUNCTION()
 	void InInventory(bool In);
@@ -81,8 +55,13 @@ protected:
 
 	float Counter;
 
+	UPROPERTY(Replicated)
+		float Weight;
+
 protected:
 			// Non Blueprint Protected Functions
+			// Sets default values for this actor's properties
+	ABasePickup();
 
 			// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -90,8 +69,8 @@ protected:
 	void SetTimer();
 	void ClearTimer();
 
-	void HandleStatTimer();
-	void UndoStatTimer();
+	virtual void HandleStatTimer();
+	virtual void UndoStatTimer();
 
 	UFUNCTION()
 	void OnRep_Pickedup();
@@ -103,13 +82,7 @@ protected:
 	UTexture2D* Thumbnail;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ENUMS")
-	EPickupType1 PickupType;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ENUMS")
 	ECoinType1 CoinType;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ENUMS")
-	EBaseStatType1 StatsType;
 
 	UPROPERTY(ReplicatedUsing = OnRep_Pickedup)
 	bool ObjectPickedup;
@@ -123,6 +96,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float AmountTime;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float PickupWeight;
+
 protected:
 			// Blueprint Protected Functions
+
 };

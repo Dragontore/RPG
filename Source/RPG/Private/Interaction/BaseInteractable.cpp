@@ -27,6 +27,8 @@ ABaseInteractable::ABaseInteractable()
 
 	InteractableInfo = CreateDefaultSubobject<UInteractableInfoComponent>(TEXT("Interactable Info"));
 
+	bReplicateMovement = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -39,6 +41,17 @@ void ABaseInteractable::BeginPlay()
 		SetReplicates(true);
 	}
 	
+}
+
+void ABaseInteractable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to every client, no special condition required
+	// Health Replicated Varibles
+	DOREPLIFETIME(ABaseInteractable, Durability);
+
+
 }
 
 void ABaseInteractable::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

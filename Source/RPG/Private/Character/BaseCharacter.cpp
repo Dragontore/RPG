@@ -25,6 +25,7 @@
 
 #include "Interaction/BasePickup.h"
 #include "Interaction/BaseInteractable.h"
+#include "Interaction/BasePotion.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -411,7 +412,8 @@ void ABaseCharacter::Interact()
 	FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
 	if (AActor* Actor = HitResult.GetActor())
 	{
-		if (ABasePickup* Pickup = Cast<ABasePickup>(Actor))
+
+		if (ABasePotion* Potion = Cast<ABasePotion>(Actor))
 		{
 			ServerInteract();
 		}
@@ -448,11 +450,12 @@ void ABaseCharacter::ServerInteract_Implementation()
 		FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
 		if (AActor* Actor = HitResult.GetActor())
 		{
-			if (ABasePickup* Pickup = Cast<ABasePickup>(Actor))
+			if (ABasePotion* Potion = Cast<ABasePotion>(Actor))
 			{
+				Potion->Interact(this);
 				if (Inventory->GetInventoryCount() < Inventory->GetInventorySlotsAmout())
 				{
-					Inventory->AddItem(Pickup);
+					Inventory->AddItem(Potion);
 				}
 			}
 			else if (ABaseInteractable* Interactable = Cast<ABaseInteractable>(Actor))
