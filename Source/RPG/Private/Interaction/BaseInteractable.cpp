@@ -50,8 +50,10 @@ void ABaseInteractable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	// Replicate to every client, no special condition required
-	// Health Replicated Varibles
+	// 
 	DOREPLIFETIME(ABaseInteractable, Durability);
+
+	DOREPLIFETIME(ABaseInteractable, BaseInteractionMeshComp);
 
 
 }

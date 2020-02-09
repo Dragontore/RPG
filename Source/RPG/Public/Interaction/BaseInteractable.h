@@ -48,7 +48,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collison")
 	float CollisonRadius;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
+	UPROPERTY(Replicated,EditAnywhere, BlueprintReadWrite, Category = "Meshes")
 	UStaticMeshComponent* BaseInteractionMeshComp;
 
 protected:
