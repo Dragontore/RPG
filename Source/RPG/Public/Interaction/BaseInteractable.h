@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void Interact(ABaseCharacter* Player);
 
+	UFUNCTION(BlueprintCallable, Category = "Health Getter")
+	float GetDurability();
+
 public:
 					// Blueprint Public Variblies
 

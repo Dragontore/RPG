@@ -29,6 +29,8 @@ ABaseInteractable::ABaseInteractable()
 
 	bReplicateMovement = true;
 
+	Durability = 100.0f;
+
 }
 
 // Called when the game starts or when spawned
@@ -68,5 +70,10 @@ void ABaseInteractable::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AAct
 FString ABaseInteractable::GetUseText()
 {
 	return FString::Printf(TEXT("%s : Press E To : %s"), *InteractableInfo->GetName(), *InteractableInfo->GetAction());
+}
+
+float ABaseInteractable::GetDurability()
+{
+	return Durability;
 }
 
