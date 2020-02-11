@@ -37,11 +37,6 @@ void ABasePickup::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (Role == ROLE_Authority)
-	{
-		SetReplicates(true);
-	}
-
 }
 
 void ABasePickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

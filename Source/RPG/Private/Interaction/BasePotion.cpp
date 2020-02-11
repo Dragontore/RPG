@@ -14,6 +14,8 @@
 ABasePotion::ABasePotion()
 {
 	PickupType = EPickupType::PT_None;
+	bReplicateMovement = true;
+	bReplicates = true;
 }
 
 void ABasePotion::HandleStatTimer()

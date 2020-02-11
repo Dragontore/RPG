@@ -27,8 +27,6 @@ ABaseInteractable::ABaseInteractable()
 
 	InteractableInfo = CreateDefaultSubobject<UInteractableInfoComponent>(TEXT("Interactable Info"));
 
-	bReplicateMovement = true;
-
 	Durability = 100.0f;
 
 }
@@ -38,10 +36,6 @@ void ABaseInteractable::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (Role == ROLE_Authority)
-	{
-		SetReplicates(true);
-	}
 	
 }
 

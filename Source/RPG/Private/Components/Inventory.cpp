@@ -55,6 +55,7 @@ void UInventory::DropItem(ABasePickup* Item)
 {
 	
 	ServerDropItem(Item);
+
 }
 
 void UInventory::UseItem(ABasePickup* Item)
@@ -104,6 +105,7 @@ void UInventory::ServerDropItem_Implementation(ABasePickup* Item)
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
+
 		FVector Location = GetOwner()->GetActorLocation();
 		Location.X += FMath::RandRange(-50.0f, 100.0f);
 		Location.Y += FMath::RandRange(-50.0f, 100.0f);
