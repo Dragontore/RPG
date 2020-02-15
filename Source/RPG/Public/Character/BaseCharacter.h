@@ -12,6 +12,7 @@ class UBaseStatsComponent;
 class ULineTrace;
 class UInventory;
 class UUserWidget;
+class ABaseContainer;
 
 UCLASS()
 class RPG_API ABaseCharacter : public ACharacter
@@ -105,6 +106,12 @@ protected: // Blueprint Functions
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	UInventory* GetInventoryComp();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OpenCloseInventory();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	ABaseContainer* GetBaseContainer();
+
 protected://Blueprint Varibles
 
 		// Die Varibles
@@ -129,6 +136,8 @@ protected: //Non Blueprint Varibles
 
 	// Die Varibles
 	FTimerHandle DestroyHandle;
+
+	ABaseContainer* OpenedContainer;
 
 protected:// Non Blueprint Functions
 

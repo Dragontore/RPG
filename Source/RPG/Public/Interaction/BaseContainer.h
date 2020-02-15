@@ -25,12 +25,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meshes")
 	UStaticMeshComponent* TopMeshComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UInventory* Inventory;
 
 
 public:	
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	UInventory* GetInventoryComponent();
 
 protected:
