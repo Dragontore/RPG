@@ -22,10 +22,10 @@
 #include "Game Mechanics/MainGameMode.h"
 #include "Components/Inventory.h"
 #include "Interaction/BaseContainer.h"
-
 #include "Interaction/BasePickup.h"
 #include "Interaction/BaseInteractable.h"
 #include "Interaction/BasePotion.h"
+#include "Interaction/BaseInteractableProp.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -407,6 +407,8 @@ void ABaseCharacter::AttempJump()
 
 void ABaseCharacter::Interact()
 {
+	//TODO Set else if to switch statment
+
 	FVector StartTrace = GetMesh()->GetBoneLocation(FName("head"));
 	FVector EndTrace = StartTrace + FollowCamera->GetForwardVector() * LineTraceLength;
 	FHitResult HitResult = LineTraceComp->LineTraceSingle(StartTrace, EndTrace, true);
@@ -417,12 +419,15 @@ void ABaseCharacter::Interact()
 		{
 			ServerInteract();
 		}
-		else if (ABaseInteractable* Interactable = Cast<ABaseInteractable>(Actor))
+		else if (ABaseInteractableProp* InteractableProp = Cast<ABaseInteractableProp>(Actor))
 		{
 			ServerInteract();
 		}
 		else if (ABaseContainer* Container = Cast<ABaseContainer>(Actor))// TODO Change code
 		{
+			OpenedContainer = Container;
+			OpenCloseInventory();
+			//TODO Check to move If Statment To server Interact.
 			ServerInteract();
 			if (UInventory* ContainerInventory = Container->GetInventoryComponent())
 			{
@@ -607,4 +612,9 @@ float ABaseCharacter::ReturnPlayerMana()
 UInventory* ABaseCharacter::GetInventoryComp()
 {
 	return Inventory;
+}
+
+ABaseContainer* ABaseCharacter::GetBaseContainer()
+{
+	return OpenedContainer;
 }
